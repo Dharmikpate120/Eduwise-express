@@ -1,57 +1,357 @@
-const express = require('express'); 
-const router = express.Router();    
+const express = require("express");
+const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.render('index');
+router.get("/", (req, res) => {
+  const Resources = [
+    {
+      title: "economics",
+      link: "/resources/economics",
+      more: [
+        { title: "class 9", link: `/resources/economics/class9` },
+        { title: "class 10", link: `/resources/economics/class10` },
+        { title: "class 11", link: `/resources/economics/class11` },
+        { title: "class 12", link: `/resources/economics/class12` },
+      ],
+    },
+    {
+      title: "geography",
+      link: "/resources/geography",
+      more: [
+        { title: "class 6", link: `/resources/geography/class6` },
+        { title: "class 7", link: `/resources/geography/class7` },
+        { title: "class 8", link: `/resources/geography/class8` },
+        { title: "class 9", link: `/resources/geography/class9` },
+        { title: "class 10", link: `/resources/geography/class10` },
+        { title: "class 11", link: `/resources/geography/class11` },
+        { title: "class 12", link: `/resources/geography/class12` },
+      ],
+    },
+    {
+      title: "history",
+      link: "/resources/history",
+      more: [
+        { title: "class 6", link: `/resources/history/class6` },
+        { title: "class 7", link: `/resources/history/class7` },
+        { title: "class 8", link: `/resources/history/class8` },
+        { title: "class 9", link: `/resources/history/class9` },
+        { title: "class 10", link: `/resources/history/class10` },
+        { title: "class 11", link: `/resources/history/class11` },
+        { title: "class 12", link: `/resources/history/class12` },
+      ],
+    },
+    {
+      title: "polity",
+      link: "/resources/polity",
+      more: [
+        { title: "class 9", link: `/resources/polity/class9` },
+        { title: "class 10", link: `/resources/polity/class10` },
+        { title: "class 11", link: `/resources/polity/class11` },
+        { title: "class 12", link: `/resources/polity/class12` },
+      ],
+    },
+    {
+      title: "sociology",
+      link: "/resources/sociology",
+      more: [
+        { title: "class 11", link: `/resources/sociology/class11` },
+        { title: "class 12", link: `/resources/sociology/class12` },
+      ],
+    },
+  ];
+  res.render("index", { Resources });
 });
 
-router.get('/course', (req,res) => {
-    res.render('course');
+router.get("/course", (req, res) => {
+  res.render("course");
 });
 
-router.get('/about',(req,res) => {
-    res.render('about');
+router.get("/about", (req, res) => {
+  res.render("about");
 });
 
-router.get('/blog',(req,res) => {   
-    res.render('blog');
+router.get("/blog", (req, res) => {
+  res.render("blog");
 });
 
-router.get('/contact',(req,res) => {    
-    res.render('contact');
+router.get("/contact", (req, res) => {
+  res.render("contact");
 });
 
-router.get('/event',(req,res) => {    
-    res.render('event');
+router.get("/event", (req, res) => {
+  res.render("event");
 });
 
-router.get('/event-details',(req,res) => {    
-    res.render('event-details');
+router.get("/resources/:subject/:className", (req, res) => {
+  const subject = req.params.subject;
+  const className = req.params.className;
+  const booksAPI = {
+    economics: {
+      class9: {
+        hindi: {
+          part1: "../../assets/books/economics-hindi-ncert-class-9.pdf",
+        },
+        english: {
+          part1: "../../assets/books/economics-ncert-class-9 (1).pdf",
+        },
+      },
+      class10: {
+        hindi: {
+          part1: "../../assets/books/economics-hindi-ncert-class-10.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/economics-ncert-class-10-indian-economic-development.pdf",
+        },
+      },
+      class11: {
+        hindi: {
+          part1: "../../assets/books/economics-hindi-ncert-class-11.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/economics-ncert-class-11-indian-economic-development.pdf",
+        },
+      },
+      class12: {
+        hindi: {
+          part1: "../../assets/books/economics-hindi-ncert-class-12-part-1.pdf",
+          part2: "../../assets/books/economics-hindi-ncert-class-12-part-2.pdf",
+        },
+        english: {
+          part1: "../../assets/books/micro-economics-ncert-class-12-part-1.pdf",
+          part2: "../../assets/books/micro-economics-ncert-class-12-part-2.pdf",
+        },
+      },
+    },
+    geography: {
+      class6: {
+        hindi: {
+          part1: "../../assets/books/geography-hindi-ncert-class-6.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/geography-ncert-class-6-social-science-the-earth-our-habitat (1).pdf",
+        },
+      },
+      class7: {
+        hindi: {
+          part1: "../../assets/books/geography-hindi-ncert-class-7.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/geography-ncert-class-7-social-science-our-environment.pdf",
+        },
+      },
+      class8: {
+        hindi: {
+          part1: "../../assets/books/geography-hindi-ncert-class-8.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/geography-ncert-class-8-social-science–resources-and-development.pdf",
+        },
+      },
+      class9: {
+        hindi: {
+          part1: "../../assets/books/geography-hindi-ncert-class-9.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/geography-ncert-class-9-social-science-contemporary-india-1.pdf",
+        },
+      },
+      class10: {
+        hindi: {
+          part1: "../../assets/books/geography-hindi-ncert-class-10.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/geography-ncert-class-10-social-science-contemporary-india-part-2.pdf",
+        },
+      },
+      class11: {
+        hindi: {
+          part1: "../../assets/books/geography-hindi-ncert-class-11-part-1.pdf",
+          part2: "../../assets/books/geography-hindi-ncert-class-11-part-2.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/geography-ncert-class-11-fundamentals-of-physical-geography.pdf",
+          part2:
+            "../../assets/books/geography-ncert-class-11-india-physical-environment.pdf",
+        },
+      },
+      class12: {
+        hindi: {
+          part1: "../../assets/books/geography-hindi-ncert-class-12-part-1.pdf",
+          part2: "../../assets/books/geography-hindi-ncert-class-12-part-2.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/geography-ncert-class-12-fundamentals-of-human-geography.pdf",
+          part2:
+            "../../assets/books/geography-ncert-class-12-india-people-and-economy.pdf",
+        },
+      },
+    },
+    history: {
+      class6: {
+        hindi: { part1: "../../assets/books/history-hindi-ncert-class-6.pdf" },
+        english: {
+          part1:
+            "../../assets/books/history-ncert-class-6-social-science-our-past-1.pdf",
+        },
+      },
+      class7: {
+        hindi: { part1: "../../assets/books/history-hindi-ncert-class-7.pdf" },
+        english: {
+          part1:
+            "../../assets/books/history-ncert-class-7-social-science-our-past-2.pdf",
+        },
+      },
+      class8: {
+        hindi: { part1: "../../assets/books/history-hindi-ncert-class-8.pdf" },
+        english: {
+          part1:
+            "../../assets/books/history-ncert-class-8-social-science-our-past-3.pdf",
+        },
+      },
+      class9: {
+        hindi: { part1: "../../assets/books/history-hindi-ncert-class-9.pdf" },
+        english: {
+          part1:
+            "../../assets/books/history-ncert-class-9-social-science-india-and-contemporary-world-1.pdf",
+        },
+      },
+      class10: {
+        hindi: { part1: "../../assets/books/history-hindi-ncert-class-10.pdf" },
+        english: {
+          part1:
+            "../../assets/books/history-ncert-class-10-social-science-india-and-contemporary-world-2.pdf",
+        },
+      },
+      class11: {
+        hindi: { part1: "../../assets/books/history-hindi-ncert-class-11.pdf" },
+        english: {
+          part1:
+            "../../assets/books/history-ncert-class-11-themes-in-world-history.pdf",
+        },
+      },
+      class12: {
+        hindi: {
+          part1: "../../assets/books/history-hindi-ncert-class-12-part-1.pdf",
+          part2: "../../assets/books/history-hindi-ncert-class-12-part-2.pdf",
+          part3: "../../assets/books/history-hindi-ncert-class-12-part-3.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/history-ncert-class-12-themes-in-indian-history-part-1.pdf",
+          part2:
+            "../../assets/books/history-ncert-class-12-themes-in-indian-history-part-2.pdf",
+          part3:
+            "../../assets/books/history-ncert-class-12-themes-in-indian-history-part-3.pdf",
+        },
+      },
+    },
+    polity: {
+      class9: {
+        hindi: {
+          part1: "../../assets/books/polity-hindi-ncert-class-9-civics-1.pdf",
+        },
+        english: { part1: "../../assets/books/class 9 polity.pdf" },
+      },
+      class10: {
+        hindi: {
+          part1: "../../assets/books/polity-hindi-ncert-class-10-civics-2.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/polity-ncert-class-10-democratic-politics-2.pdf",
+        },
+      },
+      class11: {
+        hindi: {
+          part1:
+            "../../assets/books/polity-hindi-ncert-class-11-political-science-1.pdf",
+          part2:
+            "../../assets/books/polity-hindi-ncert-class-11-political-science-2.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/polity-ncert-class-11-indian-constitution-at-work.pdf",
+          part2:
+            "../../assets/books/polity-ncert-class-11-political-theory.pdf",
+        },
+      },
+      class12: {
+        hindi: {
+          part1:
+            "../../assets/books/polity-hindi-ncert-class-12-political-science.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/polity-ncert-class-12-polity-politics-in-india-since-independence.pdf",
+        },
+      },
+    },
+    sociology: {
+      class11: {
+        hindi: {
+          part1: "../../assets/books/sociology-hindi-ncert-class-11-part-1.pdf",
+          part2: "../../assets/books/sociology-hindi-ncert-class-11-part-2.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/sociology-ncert-class-11-part-1-introducing-sociology.pdf",
+          part2:
+            "../../assets/books/sociology-ncert-class-11-part-2-understanding-sociology.pdf",
+        },
+      },
+      class12: {
+        hindi: {
+          part1: "../../assets/books/sociology-hindi-ncert-class-12-part-1.pdf",
+          part2: "../../assets/books/sociology-hindi-ncert-class-12-part-2.pdf",
+        },
+        english: {
+          part1:
+            "../../assets/books/sociology-ncert-class-12-part-1-indian-society.pdf",
+          part1:
+            "../../assets/books/sociology-ncert-class-12-part-2-social-change-and-development.pdf",
+        },
+      },
+    },
+  };
+  
+  res.render("event-details", {
+    subject,
+    className,
+    books: booksAPI[subject][className],
+  });
 });
 
-router.get('/forgot-password',(req,res) => {
-    res.render('forgot-password');
+router.get("/forgot-password", (req, res) => {
+  res.render("forgot-password");
 });
 
-router.get('/teacher-profile',(req,res) => {
-    res.render('teacher-profile');
+router.get("/teacher-profile", (req, res) => {
+  res.render("teacher-profile");
 });
 
-router.get('/team',(req,res) => {
-    res.render('team');
+router.get("/team", (req, res) => {
+  res.render("team");
 });
 
-router.get('/become-a-teacher',(req,res) => {
-    res.render('become-a-teacher');
+router.get("/become-a-teacher", (req, res) => {
+  res.render("become-a-teacher");
 });
 
-router.get('/course-details',(req,res) => {
-    res.render('course-details');
+router.get("/course-details", (req, res) => {
+  res.render("course-details");
 });
 
-router.get('/open-test',(req,res) => {
-    // res.render('open-test');
-    res.send("Open Test");
+router.get("/open-test", (req, res) => {
+  // res.render('open-test');
+  res.send("Open Test");
 });
 
 module.exports = router;

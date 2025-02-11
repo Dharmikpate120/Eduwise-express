@@ -77,6 +77,7 @@
   <body>
     <header class="header_tow">
       <!-- Preloader -->
+
       <div id="preloader">
         <div id="status">&nbsp;</div>
       </div>
@@ -174,38 +175,26 @@
                 </li>
                 <li class="nav-item">
                   <a href="/blog" class="nav-link">Resources</a>
+                  <ul class="navbar-nav nav mx-auto">
+                    <% Resources.map((item)=>{ %>
+                    <li class="nav-item">
+                      <a href="/" class=""><%= item.title%></a>
+                      <ul class="navbar-nav nav mx-auto">
+                        <%item.more.map((e)=>{%>
+                        <li class="nav-item">
+                          <a href="<%=e.link%>" class="nav-link"
+                            ><%=e.title%></a
+                          >
+                        </li>
+
+                        <%})%>
+                      </ul>
+                    </li>
+                    <% })%>
+                  </ul>
                 </li>
                 <li class="nav-item">
                   <a href="/" class="nav-link">Current Affairs</a>
-                  <!-- <ul class="navbar-nav nav mx-auto">
-                    <li class="nav-item">
-                      <a href="/" class="">Courses</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/course" class="">Events</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/blog" class=" ">Blog</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/become-a-teacher" class="nav-link"
-                        >Become A Teacher</a
-                      >
-                    </li>
-                    <li class="nav-item">
-                      <a href="/teacher-profile" class="nav-link"
-                        >Teachers Profile</a
-                      >
-                    </li>
-                    <li class="nav-item">
-                      <a href="/team" class="nav-link">Teachers Page</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="/forgot-password" class="nav-link"
-                        >Forgot Password</a
-                      >
-                    </li>
-                  </ul> -->
                 </li>
                 <li class="nav-item">
                   <a href="/contact" class="nav-link">MentorShip</a>

@@ -7,7 +7,12 @@ dotenv.config();
 app.set("view engine", "ejs");
 
 app.use(express.static(path.join(__dirname, "Public")));
-
+app.use((req, res, next) => {
+  if (req.path.endsWith(".css")) {
+    res.setHeader("Content-Type", "text/css");
+  }
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
