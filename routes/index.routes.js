@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const cfdata = require("../demodata");
 
 router.get("/", (req, res) => {
   const Resources = [
@@ -67,10 +68,6 @@ router.get("/course", (req, res) => {
 
 router.get("/about", (req, res) => {
   res.render("about");
-});
-
-router.get("/blog", (req, res) => {
-  res.render("blog");
 });
 
 router.get("/contact", (req, res) => {
@@ -321,12 +318,15 @@ router.get("/resources/:subject/:className", (req, res) => {
       },
     },
   };
-  
-  res.render("event-details", {
+
+  res.render("resources", {
     subject,
     className,
     books: booksAPI[subject][className],
   });
+});
+router.get("/current-affairs", (req, res) => {
+  res.render("event", { data: cfdata });
 });
 
 router.get("/forgot-password", (req, res) => {
