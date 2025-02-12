@@ -60,6 +60,10 @@
       .subsection-title {
         font-weight: bold;
         margin-bottom: 10px;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: space-between;
       }
       .object-container {
         /* Style for the object container if needed */
@@ -69,6 +73,21 @@
       .object-container object {
         width: 100%;
         height: 100%;
+      }
+      .download_btn {
+        font-size: 1.2rem;
+        font-weight: 500;
+        border-radius: 3px;
+        color: white;
+        padding: 0.2rem 1rem;
+        background: #ff5a2c;
+        text-align: center;
+        display: grid;
+        place-items: center;
+      }
+      .download_btn:hover {
+        color: white;
+        text-decoration: none;
       }
     </style>
   </head>
@@ -453,9 +472,13 @@
           <h1>Hindi Books</h1>
           <%Object.entries(books.hindi).map(([part,url])=>{%>
           <div class="subsection">
-            <h2 class="subsection-title">
-              <%=subject.toUpperCase()%> <%=className%> <%=part%>
-            </h2>
+            <h3 class="subsection-title">
+              <%=subject.toUpperCase()%> <%=className.toUpperCase()%>
+              <%=part.toUpperCase()%>
+              <a class="download_btn" download="book" href="<%=url%>"
+                >Download the PDF</a
+              >
+            </h3>
             <div class="object-container">
               <object
                 data="<%=url%>"
@@ -480,9 +503,11 @@
           <h1>English Books</h1>
           <%Object.entries(books.english).map(([part,url])=>{%>
           <div class="subsection">
-            <h2 class="subsection-title">
-              <%=subject.toUpperCase()%> <%=className%> <%=part%>
-            </h2>
+            <h3 class="subsection-title">
+              <%=subject.toUpperCase()%> <%=className.toUpperCase()%>
+              <%=part.toUpperCase()%>
+              <a class="download_btn" href="<%=url%>">Download the PDF</a>
+            </h3>
             <div class="object-container">
               <object
                 data="<%=url%>"
