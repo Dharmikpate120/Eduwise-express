@@ -2,76 +2,76 @@ const express = require("express");
 const router = express.Router();
 const cfdata = require("../demodata");
 
+const Resources = [
+  {
+    title: "Economics",
+    link: "/resources/economics",
+    more: [
+      { title: "Class 9", link: `/resources/economics/class9` },
+      { title: "Class 10", link: `/resources/economics/class10` },
+      { title: "Class 11", link: `/resources/economics/class11` },
+      { title: "Class 12", link: `/resources/economics/class12` },
+    ],
+  },
+  {
+    title: "Geography",
+    link: "/resources/geography",
+    more: [
+      { title: "Class 6", link: `/resources/geography/class6` },
+      { title: "Class 7", link: `/resources/geography/class7` },
+      { title: "Class 8", link: `/resources/geography/class8` },
+      { title: "Class 9", link: `/resources/geography/class9` },
+      { title: "Class 10", link: `/resources/geography/class10` },
+      { title: "Class 11", link: `/resources/geography/class11` },
+      { title: "Class 12", link: `/resources/geography/class12` },
+    ],
+  },
+  {
+    title: "History",
+    link: "/resources/history",
+    more: [
+      { title: "Class 6", link: `/resources/history/class6` },
+      { title: "Class 7", link: `/resources/history/class7` },
+      { title: "Class 8", link: `/resources/history/class8` },
+      { title: "Class 9", link: `/resources/history/class9` },
+      { title: "Class 10", link: `/resources/history/class10` },
+      { title: "Class 11", link: `/resources/history/class11` },
+      { title: "Class 12", link: `/resources/history/class12` },
+    ],
+  },
+  {
+    title: "Polity",
+    link: "/resources/polity",
+    more: [
+      { title: "Class 9", link: `/resources/polity/class9` },
+      { title: "Class 10", link: `/resources/polity/class10` },
+      { title: "Class 11", link: `/resources/polity/class11` },
+      { title: "Class 12", link: `/resources/polity/class12` },
+    ],
+  },
+  {
+    title: "Sociology",
+    link: "/resources/sociology",
+    more: [
+      { title: "Class 11", link: `/resources/sociology/class11` },
+      { title: "Class 12", link: `/resources/sociology/class12` },
+    ],
+  },
+];
 router.get("/", (req, res) => {
-  const Resources = [
-    {
-      title: "Economics",
-      link: "/resources/economics",
-      more: [
-        { title: "Class 9", link: `/resources/economics/class9` },
-        { title: "Class 10", link: `/resources/economics/class10` },
-        { title: "Class 11", link: `/resources/economics/class11` },
-        { title: "Class 12", link: `/resources/economics/class12` },
-      ],
-    },
-    {
-      title: "Geography",
-      link: "/resources/geography",
-      more: [
-        { title: "Class 6", link: `/resources/geography/class6` },
-        { title: "Class 7", link: `/resources/geography/class7` },
-        { title: "Class 8", link: `/resources/geography/class8` },
-        { title: "Class 9", link: `/resources/geography/class9` },
-        { title: "Class 10", link: `/resources/geography/class10` },
-        { title: "Class 11", link: `/resources/geography/class11` },
-        { title: "Class 12", link: `/resources/geography/class12` },
-      ],
-    },
-    {
-      title: "History",
-      link: "/resources/history",
-      more: [
-        { title: "Class 6", link: `/resources/history/class6` },
-        { title: "Class 7", link: `/resources/history/class7` },
-        { title: "Class 8", link: `/resources/history/class8` },
-        { title: "Class 9", link: `/resources/history/class9` },
-        { title: "Class 10", link: `/resources/history/class10` },
-        { title: "Class 11", link: `/resources/history/class11` },
-        { title: "Class 12", link: `/resources/history/class12` },
-      ],
-    },
-    {
-      title: "Polity",
-      link: "/resources/polity",
-      more: [
-        { title: "Class 9", link: `/resources/polity/class9` },
-        { title: "Class 10", link: `/resources/polity/class10` },
-        { title: "Class 11", link: `/resources/polity/class11` },
-        { title: "Class 12", link: `/resources/polity/class12` },
-      ],
-    },
-    {
-      title: "Sociology",
-      link: "/resources/sociology",
-      more: [
-        { title: "Class 11", link: `/resources/sociology/class11` },
-        { title: "Class 12", link: `/resources/sociology/class12` },
-      ],
-    },
-  ];
   res.render("index", { Resources });
 });
 
 router.get("/course", (req, res) => {
-  res.render("course");
+  res.render("course", { Resources });
 });
 
 router.get("/about", (req, res) => {
-  res.render("about");
+  res.render("about", { Resources });
 });
 
 router.get("/contact", (req, res) => {
-  res.render("contact");
+  res.render("contact", { Resources });
 });
 
 router.get("/event", (req, res) => {
@@ -322,36 +322,37 @@ router.get("/resources/:subject/:className", (req, res) => {
   res.render("resources", {
     subject,
     className,
+    Resources,
     books: booksAPI[subject][className],
   });
 });
 router.get("/current-affairs", (req, res) => {
-  res.render("event", { data: cfdata });
+  res.render("event", { data: cfdata, Resources });
 });
 
 router.get("/forgot-password", (req, res) => {
-  res.render("forgot-password");
+  res.render("forgot-password", { Resources });
 });
 
 router.get("/teacher-profile", (req, res) => {
-  res.render("teacher-profile");
+  res.render("teacher-profile", { Resources });
 });
 
 router.get("/team", (req, res) => {
-  res.render("team");
+  res.render("team", { Resources });
 });
 
 router.get("/become-a-teacher", (req, res) => {
-  res.render("become-a-teacher");
+  res.render("become-a-teacher", { Resources });
 });
 
 router.get("/course-details", (req, res) => {
-  res.render("course-details");
+  res.render("course-details", { Resources });
 });
 
 router.get("/open-test", (req, res) => {
   // res.render('open-test');
-  res.send("Open Test");
+  res.send("Open Test", { Resources }   );
 });
 
 module.exports = router;

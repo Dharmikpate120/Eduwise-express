@@ -48,6 +48,8 @@
     <link rel="stylesheet" href="css/eventCSS/styles.css" />
 
     <script src="./uservalidation/index.js" defer></script>
+    <script src="../js/index.js" defer></script>
+
     <script src="./index.js" defer></script>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/popper.min.js"></script>
@@ -77,6 +79,7 @@
   <body>
     <header class="header_tow">
       <!-- Preloader -->
+
       <div id="preloader">
         <div id="status">&nbsp;</div>
       </div>
@@ -115,14 +118,13 @@
                   <ul id="auth_successfull">
                     <li class="nav-item">
                       <a
-                        href="#"
                         onclick="logout()"
                         class="nav-link join_now js-modal-show"
                         ><i class="flaticon-padlock"></i>Log Out</a
                       >
                     </li>
                   </ul>
-                  <a href="#" title="" class="apply_btn">Apply Now</a>
+                  <a href="/" title="" class="apply_btn">Apply Now</a>
                 </div>
               </div>
             </div>
@@ -130,10 +132,16 @@
         </div>
       </div>
 
-      <div class="edu_nav" style="background-color: rgba(0, 0, 0, 0.227);">
+      <div
+        class="edu_nav"
+        style="
+          background-color: rgba(255, 255, 255, 0.359);
+          backdrop-filter: blur(10px);
+        "
+      >
         <div class="container">
           <nav class="navbar navbar-expand-md navbar-light bg-faded">
-            <a class="navbar-brand" href="index-2.html"
+            <a class="navbar-brand" href="/"
               ><img src="images/logo2.png" alt="logo"
             /></a>
             <div
@@ -142,22 +150,22 @@
             >
               <ul class="navbar-nav nav lavalamp ml-auto menu">
                 <li class="nav-item">
-                  <a href="#" class="nav-link active">Home</a>
+                  <a href="/" class="nav-link active">Home</a>
                   <!-- <ul class="navbar-nav nav mx-auto">
-                                <!-- <li class="nav-item"><a href="index-2.html" class="nav-link">Home Version 01</a></li> -->
+                                <!-- <li class="nav-item"><a href="/" class="nav-link">Home Version 01</a></li> -->
                   <!-- <li class="nav-item"><a href="index-3.html" class="nav-link">Home Version 02</a></li> -->
                   <!-- <li class="nav-item"><a href="index-4.html" class="nav-link">Home Version 03</a></li>
                                 <li class="nav-item"><a href="index-5.html" class="nav-link">Home Version 04</a></li> 
                             </ul> -->
                 </li>
                 <li class="nav-item">
-                  <a href="about.html" class="nav-link">About</a>
+                  <a href="/about" class="nav-link">About</a>
                 </li>
                 <li class="nav-item">
-                  <a href="course.html" class="nav-link">Courses</a>
+                  <a href="/course" class="nav-link">Courses</a>
                   <!-- <ul class="navbar-nav nav mx-auto">
                     <li class="nav-item">
-                      <a href="course.html" class="nav-link">Courses</a>
+                      <a href="/course" class="nav-link">Courses</a>
                     </li>
                     <li class="nav-item">
                       <a href="course-details.html" class="nav-link"
@@ -167,101 +175,33 @@
                   </ul> -->
                 </li>
                 <li class="nav-item">
-                  <a href="blog.html" class="nav-link">Resources</a>
+                  <a href="/blog" class="nav-link">Resources</a>
                   <ul class="navbar-nav nav mx-auto">
+                    <% Resources.map((item)=>{ %>
                     <li class="nav-item">
-                      <a href="blog.html" class="nav-link">Blog List</a>
+                      <a href="/" class=""><%= item.title%></a>
+                      <ul class="navbar-nav nav mx-auto">
+                        <%item.more.map((e)=>{%>
+                        <li class="nav-item">
+                          <a href="<%=e.link%>" class="nav-link"
+                            ><%=e.title%></a
+                          >
+                        </li>
+
+                        <%})%>
+                      </ul>
                     </li>
-                    <li class="nav-item">
-                      <a href="blog-2.html" class="nav-link">Blog Grid One</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="blog-3.html" class="nav-link">Blog Grid Two</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="blog-details.html" class="nav-link"
-                        >Blog Details</a
-                      >
-                    </li>
+                    <% })%>
                   </ul>
                 </li>
                 <li class="nav-item">
-                  <a href="#" class="nav-link">Current Affairs</a>
-                  <ul class="navbar-nav nav mx-auto">
-                    <li class="nav-item">
-                      <a href="#" class="nav-link dropdown_icon">Courses</a>
-                      <ul class="navbar-nav nav mx-auto">
-                        <li class="nav-item">
-                          <a href="course.html" class="nav-link">Courses</a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="course-details.html" class="nav-link"
-                            >Courses Details</a
-                          >
-                        </li>
-                      </ul>
-                    </li>
-                    <li class="nav-item">
-                      <a href="#" class="nav-link dropdown_icon">Events</a>
-                      <ul class="navbar-nav nav mx-auto">
-                        <li class="nav-item">
-                          <a href="event.html" class="nav-link">Event</a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="event-details.html" class="nav-link"
-                            >Event Details</a
-                          >
-                        </li>
-                      </ul>
-                    </li>
-                    <li class="nav-item">
-                      <a href="#" class="nav-link dropdown_icon">Blog</a>
-                      <ul class="navbar-nav nav mx-auto">
-                        <li class="nav-item">
-                          <a href="blog.html" class="nav-link">Blog List</a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="blog-2.html" class="nav-link"
-                            >Blog Grid One</a
-                          >
-                        </li>
-                        <li class="nav-item">
-                          <a href="blog-3.html" class="nav-link"
-                            >Blog Grid Two</a
-                          >
-                        </li>
-                        <li class="nav-item">
-                          <a href="blog-details.html" class="nav-link"
-                            >Blog Details</a
-                          >
-                        </li>
-                      </ul>
-                    </li>
-                    <li class="nav-item">
-                      <a href="become-a-teacher.html" class="nav-link"
-                        >Become A Teacher</a
-                      >
-                    </li>
-                    <li class="nav-item">
-                      <a href="teacher-profile.html" class="nav-link"
-                        >Teachers Profile</a
-                      >
-                    </li>
-                    <li class="nav-item">
-                      <a href="team.html" class="nav-link">Teachers Page</a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="forgot-password.html" class="nav-link"
-                        >Forgot Password</a
-                      >
-                    </li>
-                  </ul>
+                  <a href="/" class="nav-link">Current Affairs</a>
                 </li>
                 <li class="nav-item">
-                  <a href="contact.html" class="nav-link">MentorShip</a>
+                  <a href="/contact" class="nav-link">MentorShip</a>
                 </li>
                 <li class="nav-item">
-                  <a href="#" class="nav-link">Open Test</a>
+                  <a href="/open-test" class="nav-link">Open Test</a>
                 </li>
               </ul>
             </div>
@@ -439,7 +379,7 @@
                 data-actions='[{"event":"click","action":"jumptoslide","slide":"rs-2939","delay":""}]'
                 data-responsive_offset="on"
                 data-responsive="off"
-                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:#ffffff;bg:#ff5a2c;bw:2px 2px 2px 2px;"}]'
+                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:/ffffff;bg:/ff5a2c;bw:2px 2px 2px 2px;"}]'
                 data-textAlign="['left','left','left','left']"
                 data-paddingtop="[12,12,8,8]"
                 data-paddingright="[40,40,30,25]"
@@ -477,7 +417,7 @@
                 data-actions='[{"event":"click","action":"jumptoslide","slide":"rs-2939","delay":""}]'
                 data-responsive_offset="on"
                 data-responsive="off"
-                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:#fff;bg:#ff5a2c;bw:2px 2px 2px 2px; "}]'
+                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:/fff;bg:/ff5a2c;bw:2px 2px 2px 2px; "}]'
                 data-textAlign="['left','left','left','left']"
                 data-paddingtop="[12,12,8,8]"
                 data-paddingright="[40,40,30,25]"
@@ -644,7 +584,7 @@
                 data-actions='[{"event":"click","action":"jumptoslide","slide":"rs-2939","delay":""}]'
                 data-responsive_offset="on"
                 data-responsive="off"
-                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:#ffffff;bg:#ff5a2c;bw:2px 2px 2px 2px;"}]'
+                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:/ffffff;bg:/ff5a2c;bw:2px 2px 2px 2px;"}]'
                 data-textAlign="['left','left','left','left']"
                 data-paddingtop="[12,12,8,8]"
                 data-paddingright="[40,40,30,25]"
@@ -682,7 +622,7 @@
                 data-actions='[{"event":"click","action":"jumptoslide","slide":"rs-2939","delay":""}]'
                 data-responsive_offset="on"
                 data-responsive="off"
-                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:#fff;bg:#ff5a2c;bw:2px 2px 2px 2px; "}]'
+                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:/fff;bg:/ff5a2c;bw:2px 2px 2px 2px; "}]'
                 data-textAlign="['left','left','left','left']"
                 data-paddingtop="[12,12,8,8]"
                 data-paddingright="[40,40,30,25]"
@@ -710,6 +650,7 @@
       </div>
       <!-- END SLIDER CONTAINER WRAPPER -->
     </header>
+    <!--  End header section-->
 
     <section class="login_signup_option">
       <div class="l-modal is-hidden--off-flow js-modal-shopify">
@@ -752,7 +693,7 @@
                     id="login"
                     role="tabpanel"
                   >
-                    <form>
+                    <form onsubmit="submitHandler">
                       <div class="row">
                         <div class="col-12 col-lg-12 col-md-12 col-lg-12">
                           <div class="form-group">
@@ -762,7 +703,7 @@
                               id="login-email"
                               class="form-control"
                               placeholder="Username"
-                              value=""
+                              value="dharmik7458@gmail.com"
                             />
                           </div>
                         </div>
@@ -774,7 +715,7 @@
                               id="login-password"
                               class="form-control"
                               placeholder="Password"
-                              value=""
+                              value="hello world"
                             />
                           </div>
                         </div>
@@ -827,7 +768,7 @@
                               id="signup-name"
                               class="form-control"
                               placeholder="Username"
-                              value=""
+                              value="dharmik"
                             />
                           </div>
                         </div>
@@ -839,7 +780,7 @@
                               id="signup-email"
                               class="form-control"
                               placeholder="Email"
-                              value=""
+                              value="dharmik7458@gmail.com"
                             />
                           </div>
                         </div>
@@ -851,7 +792,7 @@
                               id="signup-password"
                               class="form-control"
                               placeholder="Password"
-                              value=""
+                              value="hello world"
                             />
                           </div>
                         </div>
@@ -887,7 +828,7 @@
           <div class="col-12 col-sm-12 col-md-7 col-lg-7">
             <div class="about_title">
               <span>About Us</span>
-              <h2>The most gorgeous online schools are built Eduwise.</h2>
+              <h2>World Inbox Knowledge Sharing Pvt. Ltd.</h2>
             </div>
           </div>
           <div class="col-12 col-sm-12 col-md-5 col-lg-5 p-0">
@@ -909,18 +850,22 @@
           <div class="col-12 col-sm-12 col-md-7 col-lg-7">
             <div class="about_content">
               <p>
-                Lorem ipsum dolor sit amet mollis felis dapibus arcu donec
-                viverra. Pede phasellus eget. Etiam maecenas vel vici quis
-                dictum rutrum nec nisi et.Lorem ipsum dolor sit amet mollis
-                felis dapibus arcu donec viverra. Pede phasellus eget. Etiam
-                maecenas vel vici quis dictum rutrum nec nisi et.Lorem ipsum
-                dolor sit amet mollis felis dapibus arcu donec viverra. Pede
-                phasellus eget. Etiam maecenas vel vici quis dictum rutrum nec
-                nisi et.
+                Welcome to World Inbox Academy, a platform designed to offer
+                top-notch coaching and learning solutions for aspirants of the
+                UPSC Civil Services Examination. Our goal is to help individuals
+                achieve their dream of becoming an IAS officer by offering
+                affordable and personalized courses tailored to their unique
+                needs and ambitions. However, if you continue to shy away from
+                pursuing your dreams, it’s a shame to let potential go to waste.
+                At World Inbox Academy, we provide the guidance and resources to
+                ensure you don’t miss out on the opportunity to build a
+                successful career in civil services. It would be a true
+                disservice to yourself to not take advantage of the quality
+                education we offer.
               </p>
-              <a href="#" title=""
+              <!-- <a href="#" title=""
                 >Read More About Us <i class="fas fa-angle-right"></i
-              ></a>
+              ></a> -->
             </div>
           </div>
         </div>
@@ -928,19 +873,20 @@
     </section>
 
     <!--========={ Popular Courses }========-->
-    <section class="unlimited_possibilities" id="about_unlimited_possibilities">
+    <!-- <section class="unlimited_possibilities" id="about_unlimited_possibilities">
       <div class="container">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-12 col-lg-12">
             <div class="sub_title">
               <h2>Unlimited Possibilities</h2>
               <p>
-                Lorem ipsum dolor sit amet mollis felis dapibus arcu donec
-                viverra. Pede phasellus eget. Etiam maecenas vel vici quis
-                dictum rutrum nec nisi et.
+                World Inbox Academy came together for the aspirants of the UPSC
+                CSE with a clear vision: to support and guide them in a
+                mission-driven approach to achieve their goals. We are dedicated
+                to the IAS aspirants, providing them with the best resources to
+                succeed in their journey.
               </p>
             </div>
-            <!-- ends: .section-header -->
           </div>
           <div class="col-12 col-sm-6 col-md-4 col-lg-4">
             <div class="single_item single_item_first">
@@ -1034,11 +980,11 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
     <!-- End Popular Courses -->
 
     <!--========={ Register Area }========-->
-    <section class="register_area">
+    <!-- <section class="register_area">
       <div class="container">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-5 col-lg-5">
@@ -1123,11 +1069,11 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
     <!-- ./ End Register Area section -->
 
     <!--========={ Our Instructiors }========-->
-    <section class="our_instructors" id="about_our_instructors">
+    <!-- <section class="our_instructors" id="about_our_instructors">
       <div class="container">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-12 col-lg-12">
@@ -1139,7 +1085,6 @@
                 dictum rutrum nec nisi et.
               </p>
             </div>
-            <!-- ends: .section-header -->
           </div>
           <div class="single-wrappe col-12 col-sm-6 col-md-4 col-lg-4">
             <div class="team-single-item">
@@ -1272,22 +1217,21 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
     <!-- ./ End Our Instructiors -->
 
-    <section class="out_count_student">
+    <section class="out_count_student" style="margin-top: 5rem">
       <div class="container">
         <div class="row">
           <div class="col-12 col-sm-12 col-md-12 col-lg-12">
             <div class="sub_title">
-              <h2>Everything Is Eduwise</h2>
+              <h2>Everything Is World Inbox</h2>
               <p>
-                Lorem ipsum dolor sit amet mollis felis dapibus arcu donec
-                viverra. Pede phasellus eget. Etiam maecenas vel vici quis
-                dictum rutrum nec nisi et.
+                World Inbox Academy came together for the aspirants of the UPSC
+                CSE with a clear vision: to support and guide them in a
+                mission-driven approach to achieve their goals.
               </p>
             </div>
-            <!-- ends: .section-header -->
           </div>
         </div>
         <div class="row">
@@ -1345,11 +1289,11 @@
         <div class="row">
           <div class="col-12 col-sm-12 col-md-12 col-lg-12">
             <div class="sub_title">
-              <h2>Frequently asked Questions</h2>
+              <h2>Why Choose World Inbox Academy?</h2>
               <p>
-                Lorem ipsum dolor sit amet mollis felis dapibus arcu donec
-                viverra. Pede phasellus eget. Etiam maecenas vel vici quis
-                dictum rutrum nec nisi et.
+                At World Inbox Academy, we are committed to providing the best
+                coaching experience for UPSC CSE aspirants. Here’s why we stand
+                out:
               </p>
             </div>
             <!-- ends: .section-header -->
@@ -1359,52 +1303,63 @@
           <div class="col-12 col-sm-12 col-md-12 col-lg-12">
             <div class="faq_wrapper">
               <div class="single_faq">
-                <h3><span>1</span>What is the refund policy?</h3>
+                <h3><span>1</span>Comprehensive Courses for All Stages</h3>
                 <p>
-                  Lorem ipsum dolor sit amet mollis felis dapibus arcu donec
-                  viverra. Pede phasellus eget maecLorem ipsum dolor sit amet
-                  mollis felis dapibus arcu donec viverra. Pede phasellus eget
-                  maecenas.
+                  Whether you’re preparing for Prelims, Mains, or the Interview
+                  stage, our tailored courses cover every aspect of the UPSC
+                  exam, ensuring you’re thoroughly prepared.
                 </p>
               </div>
               <div class="single_faq">
-                <h3><span>2</span>What is the refund policy?</h3>
+                <h3><span>2</span>Affordable Yet High-Quality Education</h3>
                 <p>
-                  Lorem ipsum dolor sit amet mollis felis dapibus arcu donec
-                  viverra. Pedsum dolor sit amet mollis felis dapibus arcu donec
-                  viverra. Pede phasellus eget maecenas.
+                  We believe that quality education should be accessible to
+                  everyone. Our courses are designed to be budget-friendly
+                  without compromising on the depth and excellence of the
+                  content.
                 </p>
               </div>
               <div class="single_faq">
-                <h3><span>3</span>What is the refund policy?</h3>
+                <h3><span>3</span>Experienced and Dedicated Faculty</h3>
                 <p>
-                  Lorem ipsum dolor sit amet mollis felis dapibus arcu donec
-                  viverra. Pede phaselsit amet mollis felis dapibus arcu donec
-                  viverra. Pede phasellus eget maecenas.
+                  Our faculty members are experienced educators and former civil
+                  servants who bring practical insights and expert guidance to
+                  the classroom. They are dedicated to helping you succeed and
+                  provide personalized attention to each student.
                 </p>
               </div>
               <div class="single_faq">
-                <h3><span>4</span>What is the refund policy?</h3>
+                <h3><span>4</span>Flexible Learning Options</h3>
                 <p>
-                  Lorem ipsum dolor sit amet mollis felis dapibus arcu donec
-                  viverra. Pede phaseamet mollis felis dapibus arcu donec
-                  viverra. Pede phasellus eget maecenas.
+                  Understanding that every learner is different, we offer both
+                  online and offline learning options. This flexibility allows
+                  you to study at your own pace and convenience, whether you
+                  prefer self-paced learning or structured classroom sessions.
                 </p>
               </div>
               <div class="single_faq">
-                <h3><span>5</span>What is the refund policy?</h3>
+                <h3><span>5</span>Result-Oriented Approach</h3>
                 <p>
-                  Lorem ipsum dolor sit amet mollis felis dapibus arcu donec
-                  viverra. Pede phasellus egelis felis dapibus arcu donec
-                  viverra. Pede phasellus eget maecenas.
+                  We focus on results. Our well-researched study materials,
+                  regular mock tests, and detailed feedback ensure that you are
+                  always progressing toward your goal of becoming an IAS
+                  officer.
                 </p>
               </div>
               <div class="single_faq">
-                <h3><span>6</span>What is the refund policy?</h3>
+                <h3><span>6</span>Personalized Mentorship</h3>
                 <p>
-                  Lorem ipsum dolor sit amet mollis felis dapibus arcu donec
-                  viverra. Pede phasellus eget sit amet mollis felis dapibus
-                  arcu donec viverra. Pede phasellus eget maecenas.
+                  At World Inbox Academy, we provide one-on-one mentoring to
+                  help you stay on track, clear doubts, and receive expert
+                  advice tailored to your individual needs.
+                </p>
+              </div>
+              <div class="single_faq">
+                <h3><span>7</span>Student-Centric Support</h3>
+                <p>
+                  From doubt-solving sessions to motivational support, we are
+                  with you every step of the way. Our goal is not just to teach
+                  but to mentor and motivate you to perform at your best.
                 </p>
               </div>
             </div>
@@ -1419,7 +1374,9 @@
           <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
             <div class="teamgroup_info_wrapper">
               <h2>
-                Lorem ipsum dolor sit amet mollis felis dapibus arcu donect.
+                Choose World Inbox Academy because we are more than just a
+                coaching center—we are your partner in turning your UPSC CSE
+                dream into a reality.
               </h2>
               <a href="#" title="" class="srtarte_btn">Get Started Now</a>
             </div>

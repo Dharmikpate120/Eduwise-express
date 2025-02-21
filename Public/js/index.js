@@ -1,5 +1,3 @@
-// const backendUrl = "http://localhost:5000";
-
 const backendUrl = "https://eduwise-1.onrender.com";
 function submitHandler(e) {
   console.log(e);
