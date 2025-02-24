@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const cfdata = require("../demodata");
-const updates = require("../utils/updates.json");
+const UpdatesModel = require("../utils/schema/update");
 
 const Resources = [
   {
@@ -59,17 +59,19 @@ const Resources = [
     ],
   },
 ];
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+  const updates = await UpdatesModel.find({});
   res.render("index", { Resources, updates });
 });
 
-router.get("/updates/:subject/:chapter", (req, res) => {
+router.get("/updates/:subject/:chapter", async (req, res) => {
   const subject = req.params.subject;
   const chapter = req.params.chapter;
-  var data = updates.filter((item) => {
-    return item.subject === subject;
-  });
-  console.log(data);
+  const result = await UpdatesModel.findOne(
+    { subject, "chapters.title": chapter },
+    { "chapters.$": 1 }
+  );
+  console.log(result.chapters[0]);
   res.render("Updates", { Resources });
 });
 
