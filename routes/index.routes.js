@@ -59,6 +59,7 @@ const Resources = [
     ],
   },
 ];
+
 router.get("/", (req, res) => {
   res.render("index", { Resources, updates });
 });
@@ -362,4 +363,13 @@ router.get("/open-test", (req, res) => {
   res.send("Open Test", { Resources });
 });
 
+
+// admin routes
+router.get('/admin-signin',(req,res)=>{
+  res.render('admin-signin', { Resources, updates });
+})
+
+router.get('/admin-dashboard',(req,res)=>{
+  res.render('admin-dashboard',{Resources, updates});
+})
 module.exports = router;
