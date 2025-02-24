@@ -46,8 +46,6 @@
     <link rel="stylesheet" href="css/responsive.css" />
     <link rel="stylesheet" href="css/demo.css" />
 
-
-
     <link rel="stylesheet" href="css/eventCSS/styles.css" />
     <script src="../userValidation/index.js" defer></script>
     <script src="../js/index.js" defer></script>
@@ -132,7 +130,8 @@
         </div>
       </div>
 
-      <div class="edu_nav"
+      <div
+        class="edu_nav"
         style="
           background-color: rgba(255, 255, 255, 0.359);
           backdrop-filter: blur(10px);
@@ -161,24 +160,34 @@
                   <a href="/about" class="nav-link">About</a>
                 </li>
                 <li class="nav-item">
-                  <a href="/course" class="nav-link">Courses</a>
-                  <!-- <ul class="navbar-nav nav mx-auto">
+                  <a class="nav-link" style="cursor: pointer">Updates</a>
+                  <ul class="navbar-nav nav mx-auto">
+                    <% updates.map((item)=>{ %>
                     <li class="nav-item">
-                      <a href="/course" class="nav-link">Courses</a>
+                      <a class="" style="cursor: pointer"><%= item.subject%></a>
+
+                      <ul class="navbar-nav nav mx-auto">
+                        <%item.chapters.map((e)=>{%>
+                        <li class="nav-item">
+                          <a
+                            href="<%=`updates/${item.subject}/${e.title}`%>"
+                            class="nav-link"
+                            ><%=e.title%></a
+                          >
+                        </li>
+
+                        <%})%>
+                      </ul>
                     </li>
-                    <li class="nav-item">
-                      <a href="course-details.html" class="nav-link"
-                        >Courses Details</a
-                      >
-                    </li>
-                  </ul> -->
+                    <% })%>
+                  </ul>
                 </li>
                 <li class="nav-item">
-                  <a href="/blog" class="nav-link">Resources</a>
+                  <a class="nav-link" style="cursor: pointer">Resources</a>
                   <ul class="navbar-nav nav mx-auto">
                     <% Resources.map((item)=>{ %>
                     <li class="nav-item">
-                      <a href="/" class=""><%= item.title%></a>
+                      <a class="" style="cursor: pointer"><%= item.title%></a>
                       <ul class="navbar-nav nav mx-auto">
                         <%item.more.map((e)=>{%>
                         <li class="nav-item">

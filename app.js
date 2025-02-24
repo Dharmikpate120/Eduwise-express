@@ -18,10 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 const indexRoutes = require("./routes/index.routes");
-const backendRoutes = require("./routes/index.backend");
-
+const adminRoutes = require("./routes/adminRoutes");
 app.use("/", indexRoutes);
-app.use("/backend", backendRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

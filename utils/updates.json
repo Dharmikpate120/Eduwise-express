@@ -1,0 +1,7 @@
+[
+  { "subject": "Economics", "chapters": [{ "title": "chap1" }] },
+  { "subject": "Geography", "chapters": [{ "title": "chap2" }] },
+  { "subject": "History", "chapters": [{ "title": "chap3" }] },
+  { "subject": "Polity", "chapters": [{ "title": "chap4" }] },
+  { "subject": "Sociology", "chapters": [{ "title": "chap5" }] }
+]

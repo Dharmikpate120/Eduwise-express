@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const cfdata = require("../demodata");
+const updates = require("../utils/updates.json");
 
 const Resources = [
   {
@@ -59,11 +60,17 @@ const Resources = [
   },
 ];
 router.get("/", (req, res) => {
-  res.render("index", { Resources });
+  res.render("index", { Resources, updates });
 });
 
-router.get("/course", (req, res) => {
-  res.render("course", { Resources });
+router.get("/updates/:subject/:chapter", (req, res) => {
+  const subject = req.params.subject;
+  const chapter = req.params.chapter;
+  var data = updates.filter((item) => {
+    return item.subject === subject;
+  });
+  console.log(data);
+  res.render("Updates", { Resources });
 });
 
 router.get("/about", (req, res) => {
@@ -352,7 +359,7 @@ router.get("/course-details", (req, res) => {
 
 router.get("/open-test", (req, res) => {
   // res.render('open-test');
-  res.send("Open Test", { Resources }   );
+  res.send("Open Test", { Resources });
 });
 
 module.exports = router;
