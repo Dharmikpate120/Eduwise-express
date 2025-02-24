@@ -4,6 +4,10 @@ const path = require("path");
 const multer = require("multer");
 const UpdatesModel = require("../utils/schema/update");
 const fs = require("fs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+const secretKey = process.env.JWT_SECRET_KEY;
 
 const storage = multer.diskStorage({
   destination: "./public/uploads/",
@@ -43,7 +47,42 @@ function checkFileType(file, cb) {
   }
 }
 
-router.post("/newUpdate", async (req, res) => {
+function verifyToken(req, res, next) {
+  const token = req.headers["authorization"]; // Extract token from Authorization header
+  console.log(req.headers["authorization"]);
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  jwt.verify(token, secretKey, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: "Failed to authenticate token" });
+    }
+
+    req.user = decoded;
+
+    next();
+  });
+}
+
+router.post("/adminsignin", upload1.none(), async (req, res) => {
+  const { userName, password } = req.body;
+  if (
+    userName === process.env.ADMIN_USERNAME &&
+    password === process.env.ADMIN_PASSWORD
+  ) {
+    try {
+      const token = jwt.sign({ userName, password }, secretKey, {
+        expiresIn: "10d",
+      });
+      res.json({ authorization: token });
+    } catch (err) {
+      console.log(err);
+      res.json({error:"provide a valid "})
+    }
+  }
+});
+router.post("/newUpdate", verifyToken, async (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
       res.send(err);
@@ -82,7 +121,7 @@ router.post("/newUpdate", async (req, res) => {
     }
   });
 });
-router.post("/changeUpdate", async (req, res) => {
+router.post("/changeUpdate", verifyToken, async (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
       res.send(err);
@@ -123,7 +162,7 @@ router.post("/changeUpdate", async (req, res) => {
     }
   });
 });
-router.post("/deleteUpdate", upload1.none(), async (req, res) => {
+router.post("/deleteUpdate", verifyToken, upload1.none(), async (req, res) => {
   const { subject, chapter } = req.body;
   var updates = await UpdatesModel.findOne({ subject });
   var chapters = updates.chapters.filter(

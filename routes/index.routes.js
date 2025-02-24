@@ -71,7 +71,6 @@ router.get("/updates/:subject/:chapter", async (req, res) => {
     { subject, "chapters.title": chapter },
     { "chapters.$": 1 }
   );
-  console.log(result.chapters[0]);
   res.render("Updates", { Resources });
 });
 
