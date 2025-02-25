@@ -2543,7 +2543,7 @@ footer .footer_top .footer_intro {
 }
 
 footer .footer_top .footer_intro img {
-  height: 45px;
+  height: 100px;
   margin-bottom: 40px;
 }
 
@@ -11293,20 +11293,20 @@ footer .shapes1_footer {
   width: 370px;
 }
 
-.demo-video{
+.demo-video {
   width: 100%;
   height: 80vh;
 }
-.video-section{
+.video-section {
   width: 100%;
   height: 100%;
 }
-.video-iframe{
+.video-iframe {
   width: 100%;
   height: 100%;
 }
 
 /* admin  */
-.admin_signin{
+.admin_signin {
   margin: 14rem;
 }

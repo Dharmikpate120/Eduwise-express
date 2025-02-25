@@ -65,28 +65,25 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/updates/:subject/:chapter", async (req, res) => {
-  const subject = req.params.subject;
-  const chapter = req.params.chapter;
   if (!updates) {
     updates = await UpdatesModel.find({});
   }
-  const result = await UpdatesModel.findOne(
+
+  const subject = req.params.subject;
+  const chapter = req.params.chapter;
+
+  var content = await UpdatesModel.findOne(
     { subject, "chapters.title": chapter },
     { "chapters.$": 1 }
   );
-  res.render("Updates", { Resources, updates });
-});
+  console.log(content);
+  if (!content) {
+    content = { warning: "The requested chapter Doesn't exist!" };
+  } else {
+    content = content.chapters[0];
+  }
 
-router.get("/about", (req, res) => {
-  res.render("about", { Resources });
-});
-
-router.get("/contact", (req, res) => {
-  res.render("contact", { Resources });
-});
-
-router.get("/event", (req, res) => {
-  res.render("event");
+  res.render("Updates", { Resources, updates, content, subject });
 });
 
 router.get("/resources/:subject/:className", async (req, res) => {
@@ -341,42 +338,69 @@ router.get("/resources/:subject/:className", async (req, res) => {
     books: booksAPI[subject][className],
   });
 });
-router.get("/current-affairs", (req, res) => {
-  res.render("event", { data: cfdata, Resources });
+router.get("/current-affairs", async (req, res) => {
+  if (!updates) {
+    updates = await UpdatesModel.find({});
+  }
+  res.render("current-affairs", { data: cfdata, Resources, updates });
 });
 
-router.get("/forgot-password", (req, res) => {
-  res.render("forgot-password", { Resources });
+router.get("/mentorship", async (req, res) => {
+  if (!updates) {
+    updates = await UpdatesModel.find({});
+  }
+  res.render("mentorship", { Resources, updates });
 });
-
-router.get("/teacher-profile", (req, res) => {
-  res.render("teacher-profile", { Resources });
+router.get("/open-test", async (req, res) => {
+  if (!updates) {
+    updates = await UpdatesModel.find({});
+  }
+  res.render("open-test", { Resources, updates });
 });
-
-router.get("/team", (req, res) => {
-  res.render("team", { Resources });
-});
-
-router.get("/become-a-teacher", (req, res) => {
-  res.render("become-a-teacher", { Resources });
-});
-
-router.get("/course-details", (req, res) => {
-  res.render("course-details", { Resources });
-});
-
-router.get("/open-test", (req, res) => {
-  // res.render('open-test');
-  res.send("Open Test", { Resources });
-});
-
 
 // admin routes
-router.get('/admin-signin',(req,res)=>{
-  res.render('admin-signin', { Resources, updates });
-})
+router.get("/admin-signin", async (req, res) => {
+  if (!updates) {
+    updates = await UpdatesModel.find({});
+  }
+  res.render("admin-signin", { Resources, updates });
+});
 
-router.get('/admin-dashboard',(req,res)=>{
-  res.render('admin-dashboard',{Resources, updates});
-})
+router.get("/admin-dashboard", async (req, res) => {
+  updates = await UpdatesModel.find({});
+  res.render("admin-dashboard", { Resources, updates });
+});
+// router.get("/about", async (req, res) => {
+//   if (!updates) {
+//     updates = await UpdatesModel.find({});
+//   }
+//   res.render("about", { Resources, updates });
+// });
+
+// router.get("/event", async (req, res) => {
+//   if (!updates) {
+//     updates = await UpdatesModel.find({});
+//   }
+//   res.render("event", { Resources, updates });
+// });
+
+// router.get("/forgot-password", (req, res) => {
+//   res.render("forgot-password", { Resources });
+// });
+
+// router.get("/teacher-profile", (req, res) => {
+//   res.render("teacher-profile", { Resources });
+// });
+
+// router.get("/team", (req, res) => {
+//   res.render("team", { Resources });
+// });
+
+// router.get("/become-a-teacher", (req, res) => {
+//   res.render("become-a-teacher", { Resources });
+// });
+
+// router.get("/course-details", (req, res) => {
+//   res.render("course-details", { Resources });
+// });
 module.exports = router;

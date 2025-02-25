@@ -12,12 +12,10 @@ const secretKey = process.env.JWT_SECRET_KEY;
 const storage = multer.diskStorage({
   destination: "./public/uploads/",
   filename: function (req, file, cb) {
-    cb(
-      null,
-      Date.now() + "-" + file.originalname + path.extname(file.originalname)
-    );
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
+
 const upload = multer({
   storage: storage,
   limits: { fileSize: 100000000 }, // Limit file size to 100MB
@@ -25,6 +23,7 @@ const upload = multer({
     checkFileType(file, cb);
   },
 }).single("resourcePdf");
+
 const upload1 = multer({
   storage: storage,
   limits: { fileSize: 1000000 }, // Limit file size to 1MB
@@ -32,6 +31,7 @@ const upload1 = multer({
     checkFileType(file, cb);
   },
 });
+
 function checkFileType(file, cb) {
   // Allowed file extensions
   const filetypes = /pdf/;
@@ -48,8 +48,8 @@ function checkFileType(file, cb) {
 }
 
 function verifyToken(req, res, next) {
-  const token = req.headers["authorization"]; // Extract token from Authorization header
-  console.log(req.headers["authorization"]);
+  const token = req.headers["authorization"];
+
   if (!token) {
     return res.status(401).json({ message: "No token provided" });
   }
@@ -78,8 +78,10 @@ router.post("/adminsignin", upload1.none(), async (req, res) => {
       res.json({ authorization: token });
     } catch (err) {
       console.log(err);
-      res.json({error:"provide a valid "})
+      res.json({ error: "error while signing in!" });
     }
+  } else {
+    res.json({ error: "invalid userName and Password Combination!" });
   }
 });
 router.post("/newUpdate", verifyToken, async (req, res) => {
@@ -88,9 +90,9 @@ router.post("/newUpdate", verifyToken, async (req, res) => {
       res.send(err);
     } else {
       if (req.file == undefined) {
-        res.send("No file selected!");
+        res.json({ error: "No file selected!" });
       } else {
-        const { chapter, subject } = req.body;
+        const { subject, chapter } = req.body;
         var updates = await UpdatesModel.findOne({ subject });
         var chapters = updates.chapters.filter(
           (element) => chapter === element.title
@@ -102,7 +104,7 @@ router.post("/newUpdate", verifyToken, async (req, res) => {
           } catch (err) {
             console.error("Error deleting the file:");
           }
-          return res.send("this chapter already exist");
+          return res.json({ error: "this chapter already exist" });
         }
         const result = await UpdatesModel.updateOne(
           { subject },
@@ -113,9 +115,9 @@ router.post("/newUpdate", verifyToken, async (req, res) => {
           }
         );
         if (result.acknowledged) {
-          res.send(`File uploaded: ${req.file.filename}`);
+          res.json({ success: `New Update Added Successfully!` });
         } else {
-          res.send("error adding file");
+          res.json({ error: "error adding new Update!" });
         }
       }
     }
@@ -127,7 +129,7 @@ router.post("/changeUpdate", verifyToken, async (req, res) => {
       res.send(err);
     } else {
       if (req.file == undefined) {
-        res.send("No file selected!");
+        res.json({ error: "No file selected!" });
       } else {
         const { chapter, subject } = req.body;
         var updates = await UpdatesModel.findOne({ subject });
@@ -137,15 +139,13 @@ router.post("/changeUpdate", verifyToken, async (req, res) => {
         if (!chapters.length) {
           try {
             fs.unlinkSync(`./public/uploads/${req.file.filename}`);
-            console.log("File deleted successfully");
           } catch (err) {
-            console.error("Error deleting the file:");
+            console.log(err);
           }
-          return res.send("this chapter doesn't exist!");
+          return res.json({ error: "this chapter doesn't exist!" });
         }
         try {
           fs.unlinkSync(`./public/uploads/${chapters[0].resourcePdf}`);
-          console.log("File deleted successfully");
         } catch (err) {
           console.error("Error deleting the file:");
         }
@@ -154,9 +154,9 @@ router.post("/changeUpdate", verifyToken, async (req, res) => {
           { $set: { "chapters.$.resourcePdf": req.file.filename } }
         );
         if (result.acknowledged) {
-          res.send(`File uploaded: ${req.file.filename}`);
+          res.json({ success: `Update Changed Successfully!` });
         } else {
-          res.send("error adding file");
+          res.json({ error: "error adding file" });
         }
       }
     }
@@ -169,7 +169,7 @@ router.post("/deleteUpdate", verifyToken, upload1.none(), async (req, res) => {
     (element) => chapter === element.title
   );
   if (!chapters.length) {
-    return res.send("this chapter doesn't exist");
+    return res.json({ error: "this chapter doesn't exist" });
   }
   const result = await UpdatesModel.updateOne(
     { subject }, // Replace with your document's identifier
@@ -178,13 +178,12 @@ router.post("/deleteUpdate", verifyToken, upload1.none(), async (req, res) => {
   if (result.acknowledged) {
     try {
       fs.unlinkSync(`./public/uploads/${chapters[0].resourcePdf}`);
-      console.log("File deleted successfully");
     } catch (err) {
-      console.error("Error deleting the file:");
+      console.log("Error deleting the file:");
     }
-    return res.send("deleted successfully");
+    return res.json({ success: "deleted successfully" });
   } else {
-    return res.send("error deleting the chapter");
+    return res.json({ error: "error deleting the chapter" });
   }
 });
 

@@ -17,7 +17,6 @@ function setCookie(name, value, days) {
 }
 
 function deleteCookie(name) {
-  
   document.cookie = `${name}=; expires=000`;
 }
 
