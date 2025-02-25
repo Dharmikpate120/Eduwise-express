@@ -83,7 +83,7 @@ router.get("/updates/:subject/:chapter", async (req, res) => {
     content = content.chapters[0];
   }
 
-  res.render("Updates", { Resources, updates, content, subject });
+  res.render("updates", { Resources, updates, content, subject });
 });
 
 router.get("/resources/:subject/:className", async (req, res) => {
