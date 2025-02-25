@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const cfdata = require("../demodata");
 const UpdatesModel = require("../utils/schema/update");
-
+var updates;
 const Resources = [
   {
     title: "Economics",
@@ -60,18 +60,21 @@ const Resources = [
   },
 ];
 router.get("/", async (req, res) => {
-  const updates = await UpdatesModel.find({});
+  updates = await UpdatesModel.find({});
   res.render("index", { Resources, updates });
 });
 
 router.get("/updates/:subject/:chapter", async (req, res) => {
   const subject = req.params.subject;
   const chapter = req.params.chapter;
+  if (!updates) {
+    updates = await UpdatesModel.find({});
+  }
   const result = await UpdatesModel.findOne(
     { subject, "chapters.title": chapter },
     { "chapters.$": 1 }
   );
-  res.render("Updates", { Resources });
+  res.render("Updates", { Resources, updates });
 });
 
 router.get("/about", (req, res) => {
@@ -86,7 +89,10 @@ router.get("/event", (req, res) => {
   res.render("event");
 });
 
-router.get("/resources/:subject/:className", (req, res) => {
+router.get("/resources/:subject/:className", async (req, res) => {
+  if (!updates) {
+    updates = await UpdatesModel.find({});
+  }
   const subject = req.params.subject;
   const className = req.params.className;
   const booksAPI = {
@@ -331,6 +337,7 @@ router.get("/resources/:subject/:className", (req, res) => {
     subject,
     className,
     Resources,
+    updates,
     books: booksAPI[subject][className],
   });
 });
