@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const cfdata = require("../demodata");
 const UpdatesModel = require("../utils/schema/update");
-var updates;
+var updates = require("../utils/updates.json");
 const Resources = [
   {
     title: "Economics",
@@ -60,7 +60,7 @@ const Resources = [
   },
 ];
 router.get("/", async (req, res) => {
-  updates = await UpdatesModel.find({});
+  // updates = await UpdatesModel.find({});
   res.render("index", { Resources, updates });
 });
 
@@ -76,12 +76,12 @@ router.get("/updates/:subject/:chapter", async (req, res) => {
     { subject, "chapters.title": chapter },
     { "chapters.$": 1 }
   );
-  console.log(content);
   if (!content) {
     content = { warning: "The requested chapter Doesn't exist!" };
   } else {
     content = content.chapters[0];
   }
+  console.log(content);
 
   res.render("updates", { Resources, updates, content, subject });
 });

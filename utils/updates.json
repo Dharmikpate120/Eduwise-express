@@ -1,7 +1,62 @@
 [
-  { "subject": "Economics", "chapters": [{ "title": "chap1" }] },
-  { "subject": "Geography", "chapters": [{ "title": "chap2" }] },
-  { "subject": "History", "chapters": [{ "title": "chap3" }] },
-  { "subject": "Polity", "chapters": [{ "title": "chap4" }] },
-  { "subject": "Sociology", "chapters": [{ "title": "chap5" }] }
+  {
+    "_id": {
+      "$oid": "67bc2a14c20f047232971631"
+    },
+    "subject": "Economics",
+    "chapters": [
+      {
+        "title": "gdp",
+        "language": [
+          {
+            "name": "hindi",
+            "resource": "1740726867332-Introduction to Algorithms.pdf"
+          },
+          {
+            "name": "english",
+            "resource": "1740726867332-Introduction to Algorithms.pdf"
+          }
+        ],
+
+        "_id": {
+          "$oid": "67c1625389125a109b0ba2ba"
+        }
+      },
+      {
+        "title": "n income",
+        "language": [],
+        "_id": {
+          "$oid": "67c162bc89125a109b0ba2c8"
+        }
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "67bc2a14c20f047232971632"
+    },
+    "subject": "Geography",
+    "chapters": []
+  },
+  {
+    "_id": {
+      "$oid": "67bc2a14c20f047232971633"
+    },
+    "subject": "History",
+    "chapters": []
+  },
+  {
+    "_id": {
+      "$oid": "67bc2a14c20f047232971634"
+    },
+    "subject": "Polity",
+    "chapters": []
+  },
+  {
+    "_id": {
+      "$oid": "67bc2a14c20f047232971635"
+    },
+    "subject": "Sociology",
+    "chapters": []
+  }
 ]

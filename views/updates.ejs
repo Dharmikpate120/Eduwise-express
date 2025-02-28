@@ -263,31 +263,30 @@
       <div class="row">
         <div class="col-md-12">
           <h1><%=subject.toUpperCase()%></h1>
+          <%content.language.map(({name,resourcePdf})=>{ %>
+
           <div class="subsection">
             <h3 class="subsection-title">
-              <%=content.title%>
-              <a
-                class="download_btn"
-                download="book"
-                href="../../uploads/<%=content.resourcePdf%>"
+              <%=content.title%> <%=name%>
+              <a class="download_btn" download="book" href="<%=resourcePdf%>"
                 >Download the PDF</a
               >
             </h3>
             <div class="object-container">
-              <!--  -->
               <object
-                data="../../uploads/<%=content.resourcePdf%>"
+                data="../../uploads/<%=resourcePdf%>"
                 type="application/pdf"
                 width="100%"
                 height="600"
               >
                 <p>
                   Your browser does not support PDF embedding.
-                  <a href="<%=content.resourcePdf%>">Download the PDF</a>
+                  <a href="<%=name%>">Download the PDF</a>
                 </p>
               </object>
             </div>
           </div>
+          <%})%>
         </div>
       </div>
     </div>
