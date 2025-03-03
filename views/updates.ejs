@@ -234,7 +234,7 @@
           <div class="row">
             <div class="col-sm-12 col-md-8 col-lg-8">
               <div class="intro_text">
-                <h1>Updates Pate</h1>
+                <h1>Updates Page</h1>
                 <div class="pages_links">
                   <a href="#" title><%=subject%></a>
                   <a href="#" title class="active"><%=content.title%></a>
@@ -263,25 +263,28 @@
       <div class="row">
         <div class="col-md-12">
           <h1><%=subject.toUpperCase()%></h1>
-          <%content.language.map(({name,resourcePdf})=>{ %>
+          <%content.language.map(({_doc})=>{ %>
 
           <div class="subsection">
             <h3 class="subsection-title">
-              <%=content.title%> <%=name%>
-              <a class="download_btn" download="book" href="<%=resourcePdf%>"
+              <%=content.title%> - <%=_doc.name%>
+              <a
+                class="download_btn"
+                download="book"
+                href="<%=_doc.resourcePdf%>"
                 >Download the PDF</a
               >
             </h3>
             <div class="object-container">
               <object
-                data="../../uploads/<%=resourcePdf%>"
+                data="../../uploads/<%=_doc.resourcePdf%>"
                 type="application/pdf"
                 width="100%"
                 height="600"
               >
                 <p>
                   Your browser does not support PDF embedding.
-                  <a href="<%=name%>">Download the PDF</a>
+                  <a href="<%=_doc.resourcePdf%>">Download the PDF</a>
                 </p>
               </object>
             </div>

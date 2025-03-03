@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const languageSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  resoursePdf: { type: String, required: true },
+  resourcePdf: { type: String, required: true },
 });
 const chapterSchema = new mongoose.Schema({
   title: { type: String, required: true },
