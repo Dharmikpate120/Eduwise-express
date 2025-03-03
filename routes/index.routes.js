@@ -65,9 +65,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/updates/:subject/:chapter", async (req, res) => {
-  if (!updates) {
-    updates = await UpdatesModel.find({});
-  }
+  updates = await UpdatesModel.find({});
 
   const subject = req.params.subject;
   const chapter = req.params.chapter;

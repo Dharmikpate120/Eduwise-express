@@ -6,6 +6,7 @@ const languageSchema = new mongoose.Schema({
 });
 const chapterSchema = new mongoose.Schema({
   title: { type: String, required: true },
+  // resourcePdf: { type: String, required: true },
   language: [languageSchema],
 });
 

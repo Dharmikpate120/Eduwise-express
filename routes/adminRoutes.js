@@ -346,7 +346,12 @@ router.post("/deleteUpdate", verifyToken, upload1.none(), async (req, res) => {
   }
   try {
     chapters.language = chapters.language.filter((lg) => lg.name !== language);
-
+    console.log(updates.chapters);
+    if (chapters.language.length === 0) {
+      updates.chapters = updates.chapters.filter(
+        (chap) => chap.title !== chapter
+      );
+    }
     await updates.save();
     try {
       fs.unlinkSync(`./public/uploads/${lg.resourcePdf}`);
