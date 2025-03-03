@@ -60,7 +60,7 @@ const Resources = [
   },
 ];
 router.get("/", async (req, res) => {
-  // updates = await UpdatesModel.find({});
+  updates = await UpdatesModel.find({});
   res.render("index", { Resources, updates });
 });
 
@@ -84,9 +84,7 @@ router.get("/updates/:subject/:chapter", async (req, res) => {
 });
 
 router.get("/resources/:subject/:className", async (req, res) => {
-  if (!updates) {
-    updates = await UpdatesModel.find({});
-  }
+  updates = await UpdatesModel.find({});
   const subject = req.params.subject;
   const className = req.params.className;
   const booksAPI = {
@@ -336,30 +334,22 @@ router.get("/resources/:subject/:className", async (req, res) => {
   });
 });
 router.get("/current-affairs", async (req, res) => {
-  if (!updates) {
-    updates = await UpdatesModel.find({});
-  }
+  updates = await UpdatesModel.find({});
   res.render("current-affairs", { data: cfdata, Resources, updates });
 });
 
 router.get("/mentorship", async (req, res) => {
-  if (!updates) {
-    updates = await UpdatesModel.find({});
-  }
+  updates = await UpdatesModel.find({});
   res.render("mentorship", { Resources, updates });
 });
 router.get("/open-test", async (req, res) => {
-  if (!updates) {
-    updates = await UpdatesModel.find({});
-  }
+  updates = await UpdatesModel.find({});
   res.render("open-test", { Resources, updates });
 });
 
 // admin routes
 router.get("/admin-signin", async (req, res) => {
-  if (!updates) {
-    updates = await UpdatesModel.find({});
-  }
+  updates = await UpdatesModel.find({});
   res.render("admin-signin", { Resources, updates });
 });
 
