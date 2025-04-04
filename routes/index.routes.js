@@ -3,6 +3,8 @@ const router = express.Router();
 const cfdata = require("../demodata");
 const UpdatesModel = require("../utils/schema/update");
 var updates = require("../utils/updates.json");
+const CurrentAffairSchema = require("../utils/schema/CurrentAffailrs");
+const OpenTestModel = require("../utils/schema/OpenTests");
 const Resources = [
   {
     title: "Economics",
@@ -58,6 +60,20 @@ const Resources = [
       { title: "Class 12", link: `/resources/sociology/class12` },
     ],
   },
+];
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 router.get("/", async (req, res) => {
   updates = await UpdatesModel.find({});
@@ -335,7 +351,18 @@ router.get("/resources/:subject/:className", async (req, res) => {
 });
 router.get("/current-affairs", async (req, res) => {
   updates = await UpdatesModel.find({});
-  res.render("current-affairs", { data: cfdata, Resources, updates });
+  var currentAffairs = await CurrentAffairSchema.find({ deleted: false }).sort({
+    date: -1,
+  });
+
+  // var currentAffairs = [];
+  res.render("current-affairs", {
+    data: cfdata,
+    Resources,
+    updates,
+    currentAffairs,
+    monthNames,
+  });
 });
 
 router.get("/mentorship", async (req, res) => {
@@ -344,6 +371,7 @@ router.get("/mentorship", async (req, res) => {
 });
 router.get("/open-test", async (req, res) => {
   updates = await UpdatesModel.find({});
+
   res.render("open-test", { Resources, updates });
 });
 
@@ -357,37 +385,43 @@ router.get("/admin-dashboard", async (req, res) => {
   updates = await UpdatesModel.find({});
   res.render("admin-dashboard", { Resources, updates });
 });
-// router.get("/about", async (req, res) => {
-//   if (!updates) {
-//     updates = await UpdatesModel.find({});
-//   }
-//   res.render("about", { Resources, updates });
-// });
+router.get("/admin-addupdates", async (req, res) => {
+  updates = await UpdatesModel.find({});
+  res.render("admin-addupdates", { Resources, updates });
+});
+router.get("/admin-changeupdates", async (req, res) => {
+  updates = await UpdatesModel.find({});
+  res.render("admin-changeupdates", { Resources, updates });
+});
+router.get("/admin-deleteupdates", async (req, res) => {
+  updates = await UpdatesModel.find({});
+  res.render("admin-deleteupdates", { Resources, updates });
+});
+router.get("/admin-currentaffair-add", async (req, res) => {
+  updates = await UpdatesModel.find({});
+  res.render("admin-ca-add", { Resources, updates });
+});
+router.get("/admin-currentaffair-bin", async (req, res) => {
+  updates = await UpdatesModel.find({});
+  var ca = await CurrentAffairSchema.find({ deleted: false });
+  res.render("admin-ca-bin", { Resources, updates, ca, monthNames });
+});
+router.get("/admin-currentaffair-recycle-bin", async (req, res) => {
+  updates = await UpdatesModel.find({});
+  var ca = await CurrentAffairSchema.find({ deleted: true });
+  res.render("admin-ca-recycle-bin", { Resources, updates, ca, monthNames });
+});
+router.get("/admin-opentest-add", async (req, res) => {
+  updates = await UpdatesModel.find({});
+  res.render("admin-ot-add", { Resources, updates });
+});
+router.get("/admin-opentest-delete", async (req, res) => {
+  updates = await UpdatesModel.find({});
+  var opentests = await OpenTestModel.find(
+    {},
+    { _id: 1, subject: 1, chapter: 1, standard: 1, teacher: 1, testName: 1 }
+  );
+  res.render("admin-ot-delete", { Resources, updates, opentests });
+});
 
-// router.get("/event", async (req, res) => {
-//   if (!updates) {
-//     updates = await UpdatesModel.find({});
-//   }
-//   res.render("event", { Resources, updates });
-// });
-
-// router.get("/forgot-password", (req, res) => {
-//   res.render("forgot-password", { Resources });
-// });
-
-// router.get("/teacher-profile", (req, res) => {
-//   res.render("teacher-profile", { Resources });
-// });
-
-// router.get("/team", (req, res) => {
-//   res.render("team", { Resources });
-// });
-
-// router.get("/become-a-teacher", (req, res) => {
-//   res.render("become-a-teacher", { Resources });
-// });
-
-// router.get("/course-details", (req, res) => {
-//   res.render("course-details", { Resources });
-// });
 module.exports = router;

@@ -24,7 +24,7 @@ const update_DOM_auth_token = () => {
   var loginPending = document.getElementById("auth_pending");
   var loginsuccessful = document.getElementById("auth_successfull");
   const cookie = getCookie("auth_token");
-  console.log(cookie);
+
   if (cookie && cookie !== "") {
     loginPending.classList.add("hide_login");
     loginsuccessful.classList.remove("hide_login");

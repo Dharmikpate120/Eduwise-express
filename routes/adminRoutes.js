@@ -5,6 +5,7 @@ const multer = require("multer");
 const UpdatesModel = require("../utils/schema/update");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
+const { verifyAdminToken } = require("../utils/middleware/verifyToken");
 require("dotenv").config();
 
 const secretKey = process.env.JWT_SECRET_KEY;
@@ -47,24 +48,6 @@ function checkFileType(file, cb) {
   }
 }
 
-function verifyToken(req, res, next) {
-  const token = req.headers["authorization"];
-
-  if (!token) {
-    return res.status(401).json({ message: "No token provided" });
-  }
-
-  jwt.verify(token, secretKey, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ message: "Failed to authenticate token" });
-    }
-
-    req.user = decoded;
-
-    next();
-  });
-}
-
 router.post("/adminsignin", upload1.none(), async (req, res) => {
   const { userName, password } = req.body;
   if (
@@ -72,7 +55,7 @@ router.post("/adminsignin", upload1.none(), async (req, res) => {
     password === process.env.ADMIN_PASSWORD
   ) {
     try {
-      const token = jwt.sign({ userName, password }, secretKey, {
+      const token = jwt.sign({ userName, password, role: "admin" }, secretKey, {
         expiresIn: "10d",
       });
       res.json({ authorization: token });
@@ -84,7 +67,7 @@ router.post("/adminsignin", upload1.none(), async (req, res) => {
     res.json({ error: "invalid userName and Password Combination!" });
   }
 });
-router.post("/newUpdate", verifyToken, async (req, res) => {
+router.post("/newUpdate", verifyAdminToken, async (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
       return res.json(err);
@@ -244,7 +227,7 @@ router.post("/newUpdate", verifyToken, async (req, res) => {
     //   }
   });
 });
-router.post("/changeUpdate", verifyToken, async (req, res) => {
+router.post("/changeUpdate", verifyAdminToken, async (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
       return res.send(err);
@@ -327,59 +310,66 @@ router.post("/changeUpdate", verifyToken, async (req, res) => {
     // }
   });
 });
-router.post("/deleteUpdate", verifyToken, upload1.none(), async (req, res) => {
-  const { subject, chapter, language } = req.body;
-  if (!subject || !chapter || !language) {
-    return res.json({ error: "Not Enough Parameters Passed!" });
-  }
-  var updates = await UpdatesModel.findOne({ subject });
-  if (!updates) {
-    return res.json({ error: "Invalid Subject Name!" });
-  }
-  var chapters = updates.chapters.find((chap) => chap.title === chapter);
-  if (!chapters) {
-    return res.json({ error: "this chapter doesn't exist!" });
-  }
-  var lg = chapters.language.find((lg) => lg.name === language);
-  if (!lg) {
-    return res.json({ error: "Selected Chapter Doesn't Even Exist!" });
-  }
-  try {
-    chapters.language = chapters.language.filter((lg) => lg.name !== language);
-    console.log(updates.chapters);
-    if (chapters.language.length === 0) {
-      updates.chapters = updates.chapters.filter(
-        (chap) => chap.title !== chapter
-      );
+router.post(
+  "/deleteUpdate",
+  verifyAdminToken,
+  upload1.none(),
+  async (req, res) => {
+    const { subject, chapter, language } = req.body;
+    if (!subject || !chapter || !language) {
+      return res.json({ error: "Not Enough Parameters Passed!" });
     }
-    await updates.save();
+    var updates = await UpdatesModel.findOne({ subject });
+    if (!updates) {
+      return res.json({ error: "Invalid Subject Name!" });
+    }
+    var chapters = updates.chapters.find((chap) => chap.title === chapter);
+    if (!chapters) {
+      return res.json({ error: "this chapter doesn't exist!" });
+    }
+    var lg = chapters.language.find((lg) => lg.name === language);
+    if (!lg) {
+      return res.json({ error: "Selected Chapter Doesn't Even Exist!" });
+    }
     try {
-      fs.unlinkSync(`./public/uploads/${lg.resourcePdf}`);
-      console.log("File deleted successfully");
-      res.json({ success: "Chapter Deleted Successfully!" });
+      chapters.language = chapters.language.filter(
+        (lg) => lg.name !== language
+      );
+      console.log(updates.chapters);
+      if (chapters.language.length === 0) {
+        updates.chapters = updates.chapters.filter(
+          (chap) => chap.title !== chapter
+        );
+      }
+      await updates.save();
+      try {
+        fs.unlinkSync(`./public/uploads/${lg.resourcePdf}`);
+        console.log("File deleted successfully");
+        res.json({ success: "Chapter Deleted Successfully!" });
+      } catch (err) {
+        console.error("Error deleting the file:", err);
+        return res.json({ error: "Internal Server Error!" });
+      }
     } catch (err) {
-      console.error("Error deleting the file:", err);
-      return res.json({ error: "Internal Server Error!" });
+      console.log(err);
+      res.json({ error: "Internal Server Error!" });
     }
-  } catch (err) {
-    console.log(err);
-    res.json({ error: "Internal Server Error!" });
+    // const result = await UpdatesModel.updateOne(
+    //   { subject }, // Replace with your document's identifier
+    //   { $pull: { chapters: { title: chapter } } }
+    // );
+    // var result = { acknowledged: true };
+    // if (result.acknowledged) {
+    // try {
+    //   fs.unlinkSync(`./public/uploads/${chapters[0].resourcePdf}`);
+    // } catch (err) {
+    //   console.log("Error deleting the file:");
+    // }
+    //   return res.json({ success: "deleted successfully" });
+    // } else {
+    //   return res.json({ error: "error deleting the chapter" });
+    // }
   }
-  // const result = await UpdatesModel.updateOne(
-  //   { subject }, // Replace with your document's identifier
-  //   { $pull: { chapters: { title: chapter } } }
-  // );
-  // var result = { acknowledged: true };
-  // if (result.acknowledged) {
-  // try {
-  //   fs.unlinkSync(`./public/uploads/${chapters[0].resourcePdf}`);
-  // } catch (err) {
-  //   console.log("Error deleting the file:");
-  // }
-  //   return res.json({ success: "deleted successfully" });
-  // } else {
-  //   return res.json({ error: "error deleting the chapter" });
-  // }
-});
+);
 
 module.exports = router;

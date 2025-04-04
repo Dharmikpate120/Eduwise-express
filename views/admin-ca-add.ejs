@@ -3,7 +3,7 @@
   <head>
     <!-- Required meta tags -->
     <meta charset="UTF-8" />
-    <meta name="description" content />
+    <meta name="description" content="" />
     <meta name="keywords" content="HTML,CSS,XML,JavaScript" />
     <meta name="author" content="Ecology Theme" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -46,6 +46,7 @@
     <link rel="stylesheet" href="css/responsive.css" />
     <link rel="stylesheet" href="css/demo.css" />
 
+    <!-- <script src="../js/index.js" defer></script> -->
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -58,7 +59,6 @@
     <script src="js/wow.min.js"></script>
     <script src="js/waypoints.min.js"></script>
     <script src="js/jquery.counterup.min.js"></script>
-
     <script src="js/assets/revolution/extensions/revolution.extension.actions.min.js"></script>
     <script src="js/assets/revolution/extensions/revolution.extension.carousel.min.js"></script>
     <script src="js/assets/revolution/extensions/revolution.extension.kenburn.min.js"></script>
@@ -70,6 +70,10 @@
     <script src="js/assets/revolution/extensions/revolution.extension.video.min.js"></script>
     <script src="js/assets/revolution/revolution.js"></script>
     <script src="js/custom.js"></script>
+
+    <link rel="stylesheet" href="css/eventCSS/styles.css" />
+    <script src="../userValidation/index.js" defer></script>
+    <script src="../userValidation/userAuth.js" defer></script>
     <style>
       .disappear {
         display: none !important;
@@ -92,47 +96,41 @@
         });
         return value;
       }
-      function deleteCookie(name) {
-        document.cookie = `${name}=; expires=000`;
-      }
+
       document.addEventListener("DOMContentLoaded", function () {
-        const signinForm = document.getElementById("signinForm");
-        const signoutForm = document.getElementById("signoutForm");
         const signinWarning = document.getElementById("signin_warning");
-        authCookie = getCookie("authorization");
-        if (authCookie) {
-          signinForm.classList.add("disappear");
-          signoutForm.classList.remove("disappear");
+        const signinForms = document.getElementById("admin_signin");
+
+        authorization = getCookie("authorization");
+        if (!authorization) {
+          signinForms.classList.add("disappear");
+          signinWarning.innerText = "you don't have admin access!";
+        } else {
+          signinWarning.classList.add("disappear");
         }
 
-        signinForm.addEventListener("submit", function (event) {
+        const addUpdateForm = document.getElementById("addCAform");
+        const addUpdateWarning = document.getElementById("addCAwarning");
+        addUpdateForm.addEventListener("submit", function (event) {
           event.preventDefault();
           const formData = new FormData(this);
-          fetch("/admin/adminsignin", {
+          fetch("/currentaffairData/admin/addcurrentaffair", {
             method: "POST",
-
+            headers: { authorization },
             body: formData,
           })
             .then((response) => response.json())
             .then((data) => {
-              if (data.authorization) {
-                setCookie("authorization", data.authorization, 10);
-                signinForm.reset();
-                signinForm.classList.add("disappear");
-                signoutForm.classList.remove("disappear");
+              if (data.success) {
+                addUpdateWarning.innerText = data.success;
+                addUpdateForm.reset();
               } else if (data.error) {
-                signinWarning.innerText = data.error;
+                addUpdateWarning.innerText = data.error;
               }
             })
             .catch((error) => {
               console.error("Error:", error);
             });
-        });
-        signoutForm.addEventListener("submit", function (event) {
-          event.preventDefault();
-          deleteCookie("authorization");
-          signinForm.classList.remove("disappear");
-          signoutForm.classList.add("disappear");
         });
       });
     </script>
@@ -154,6 +152,31 @@
                   </ul>
                 </div>
                 <div class="login_info">
+                  <ul class="" style="display: flex" id="auth_pending">
+                    <li class="nav-item">
+                      <a href="#" class="nav-link sign-in js-modal-show"
+                        ><i
+                          class="flaticon-user-male-black-shape-with-plus-sign"
+                        ></i
+                        >Sign Up</a
+                      >
+                    </li>
+                    <li class="nav-item">
+                      <a href="#" class="nav-link join_now js-modal-show"
+                        ><i class="flaticon-padlock"></i>Log In</a
+                      >
+                    </li>
+                  </ul>
+                  <ul id="auth_successfull">
+                    <li class="nav-item">
+                      <a
+                        href="#"
+                        onclick="logout()"
+                        class="nav-link join_now js-modal-show"
+                        ><i class="flaticon-padlock"></i>Log Out</a
+                      >
+                    </li>
+                  </ul>
                   <a
                     href="https://clpdiy14.page.link/purF"
                     target="_blank"
@@ -171,7 +194,7 @@
       <div
         class="edu_nav"
         style="
-          background-color: rgba(255, 255, 255, 0.359);
+          background-color: rgba(255, 255, 255, 0.65);
           backdrop-filter: blur(10px);
         "
       >
@@ -247,80 +270,301 @@
           </nav>
         </div>
       </div>
-    </header>
 
-    <section class="admin_signin">
-      <div>
-        <div class="form-full-box">
-          <div class="form_title">
-            <h2>Admin Signin</h2>
-            <p>Not for students ; please access app for more information</p>
-          </div>
-          <div id="signin_warning" style="color: red; font-size: large"></div>
-          <form id="signinForm">
-            <div class="register-form">
-              <div class="row">
-                <div class="col-12 col-xs-12 col-md-12">
-                  <div class="form-group">
-                    <label><i class="fas fa-user"></i></label>
-                    <input
-                      class="form-control"
-                      name="userName"
-                      placeholder="Write Your Username"
-                      required
-                      type="email"
-                    />
+      <style>
+        .header {
+          position: relative;
+          background: url("images/banner/original_banner.jpg") no-repeat center
+            center;
+          background-size: cover;
+          height: 100vh;
+          color: white;
+        }
+        .header-content {
+          position: absolute;
+          min-width: 60%;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+        }
+        .header-title {
+          font-size: 3rem;
+          font-weight: bold;
+          color: #ffffff;
+        }
+        .header-text {
+          font-size: 1.5rem;
+          margin-bottom: 20px;
+          color: #ffffff;
+        }
+        .header-button {
+          font-size: 1rem;
+          padding: 10px 20px;
+          background: #ff5a2c;
+          border: none;
+        }
+      </style>
+
+      <header class="header_inner contact_page">
+        <div class="intro_wrapper">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-12 col-md-8 col-lg-8">
+                <div class="intro_text">
+                  <h1>Add Current Affairs</h1>
+                  <div class="pages_links">
+                    <a href="#" title="">Admin</a>
+                    <a href="#" title="" class="active">Add Current Affairs</a>
                   </div>
-                </div>
-
-                <div class="col-12 col-xs-12 col-md-12">
-                  <div class="form-group">
-                    <!-- <label><i class="fas fa-user"></i></label> -->
-                    <input
-                      class="form-control"
-                      name="password"
-                      placeholder="Password"
-                      required
-                      type="password"
-                    />
-                  </div>
-                </div>
-
-                <div class="col-12 col-xs-12 col-md-12 register-btn-box">
-                  <button
-                    class="register-btn btn btn-primary btn-lg mt-4"
-                    type="submit"
-                  >
-                    signin
-                  </button>
                 </div>
               </div>
             </div>
-          </form>
-          <form id="signoutForm" class="disappear">
+          </div>
+        </div>
+      </header>
+      <section class="login_signup_option">
+        <div class="l-modal is-hidden--off-flow js-modal-shopify">
+          <div class="l-modal__shadow js-modal-hide"></div>
+          <div class="login_popup login_modal_body">
+            <div class="Popup_title d-flex justify-content-between">
+              <h2 class="hidden">&nbsp;</h2>
+              <div class="row">
+                <div
+                  class="col-12 col-lg-12 col-md-12 col-lg-12 login_option_btn"
+                >
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                      <a
+                        class="nav-link active"
+                        data-toggle="tab"
+                        href="#login"
+                        role="tab"
+                        >Login</a
+                      >
+                    </li>
+                    <li class="nav-item">
+                      <a
+                        class="nav-link"
+                        data-toggle="tab"
+                        href="#panel2"
+                        role="tab"
+                        >Register</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                  <!-- Tab panels -->
+                  <div class="tab-content card">
+                    <!--Login-->
+                    <div
+                      class="tab-pane fade in show active"
+                      id="login"
+                      role="tabpanel"
+                    >
+                      <form onsubmit="submitHandler">
+                        <div class="row">
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Email</label>
+                              <input
+                                type="email"
+                                id="login-email"
+                                class="form-control"
+                                placeholder="Username"
+                                value="dharmik7458@gmail.com"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Password</label>
+                              <input
+                                type="password"
+                                id="login-password"
+                                class="form-control"
+                                placeholder="Password"
+                                value="hello world"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div
+                            class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-default login_btn"
+                              onclick="login()"
+                            >
+                              Login
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="tab-pane fade" id="panel2" role="tabpanel">
+                      <form action="#" class="register">
+                        <div class="row">
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Name</label>
+                              <input
+                                type="text"
+                                id="signup-name"
+                                class="form-control"
+                                placeholder="Username"
+                                value="dharmik"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Email</label>
+                              <input
+                                type="email"
+                                id="signup-email"
+                                class="form-control"
+                                placeholder="Email"
+                                value="dharmik7458@gmail.com"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Password</label>
+                              <input
+                                type="password"
+                                id="signup-password"
+                                class="form-control"
+                                placeholder="Password"
+                                value="hello world"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div
+                            class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-default login_btn"
+                              onclick="signup()"
+                            >
+                              Register
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <!--/.Panel 2-->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </header>
+    <h2
+      id="signin_warning"
+      style="
+        margin: 10rem 0 5rem 0;
+        color: red;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      "
+    ></h2>
+    <section id="admin_signin" class="admin_signin">
+      <div class="mt-5">
+        <div class="form-full-box">
+          <div class="form_title">
+            <h2>Add Current Affair</h2>
+            <p id="addCAwarning" style="color: red; font-size: x-large"></p>
+          </div>
+          <form id="addCAform">
             <div class="register-form">
               <div class="row">
                 <div class="col-12 col-xs-12 col-md-12">
                   <div class="form-group">
-                    <label>You're signed in already! </label>
+                    <label>Title:</label>
+                    <input
+                      class="form-control"
+                      name="title"
+                      placeholder="title"
+                      required
+                      type="text"
+                      value="hello"
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <label>Content:</label>
+                    <input
+                      class="form-control"
+                      name="content"
+                      placeholder="content"
+                      required
+                      type="text"
+                      value="hello"
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <label>Writer:</label>
+                    <input
+                      class="form-control"
+                      name="writer"
+                      placeholder="writer"
+                      required
+                      type="text"
+                      value="hello"
+                    />
                   </div>
                 </div>
 
+                <div class="col-12 col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <label for="formFileLg" class="form-label"
+                      >Cover Image</label
+                    >
+                    <input
+                      class="form-control form-control-lg"
+                      id="formFileLg"
+                      type="file"
+                      name="coverImage"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <label for="formFileLg" class="form-label"
+                      >Header Image</label
+                    >
+                    <input
+                      class="form-control form-control-lg"
+                      id="formFileLg"
+                      type="file"
+                      name="headerImage"
+                      required
+                    />
+                  </div>
+                </div>
                 <div class="col-12 col-xs-12 col-md-12 register-btn-box">
                   <button
                     class="register-btn btn btn-primary btn-lg mt-4"
                     type="submit"
                   >
-                    signout
+                    Delete
                   </button>
-                </div>
-                <div class="col-12 col-xs-12 col-md-12 register-btn-box">
-                  <a
-                    href="admin-dashboard"
-                    class="register-btn btn btn-primary btn-lg mt-4"
-                  >
-                    admin-dashboard
-                  </a>
                 </div>
               </div>
             </div>
@@ -328,8 +572,6 @@
         </div>
       </div>
     </section>
-
-    <!-- Footer -->
     <footer class="footer_2">
       <div class="container">
         <div class="footer_top">
@@ -337,7 +579,6 @@
             <div class="col-12 col-md-6 col-lg-4">
               <div class="footer_single_col footer_intro">
                 <img src="images/LOGO_LIGHT.png" alt="" class="f_logo" />
-
                 <p>World Inbox Academy Vadodara</p>
               </div>
             </div>
@@ -402,13 +643,5 @@
         <img src="images/shapes/footer_2.png" alt="" class="shape_1" />
       </div>
     </footer>
-    <!-- End Footer -->
-
-    <section id="scroll-top" class="scroll-top">
-      <h2 class="disabled">Scroll to top</h2>
-      <div class="to-top pos-rtive">
-        <a href="/"><i class="flaticon-right-arrow"></i></a>
-      </div>
-    </section>
   </body>
 </html>

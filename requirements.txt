@@ -1,0 +1,5 @@
+test must not be restarted either completed or abandoned,
+each action user takes must be reported to backend web sockets,
+if test is attempted abandoned(closed the window) show warning,
+one test is only usable only once,
+

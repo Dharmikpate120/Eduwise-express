@@ -74,6 +74,238 @@
     <link rel="stylesheet" href="css/eventCSS/styles.css" />
     <script src="../userValidation/index.js" defer></script>
     <script src="../userValidation/userAuth.js" defer></script>
+    <style>
+      .disappear {
+        display: none !important;
+      }
+      #questions {
+        border-radius: 10px;
+        padding: 1rem;
+      }
+      #questions > .questionCover {
+        border-bottom: 1px solid gray;
+        padding: 1rem;
+      }
+      .question {
+        color: black !important;
+        font-weight: 700;
+        font-size: large;
+      }
+      .optionsCover {
+        display: grid;
+        grid-template-columns: auto auto;
+      }
+      .answer {
+        color: black !important;
+        font-weight: 700;
+      }
+    </style>
+    <script>
+      function setCookie(name, value, days) {
+        let date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        let expires = "expires=" + date.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires;
+      }
+      function getCookie(name) {
+        var value = null;
+        document.cookie.split(";").map((element) => {
+          var arr = element.split("=");
+          if (arr[0] === ` ${name}` || arr[0] === name) {
+            value = arr[1] === "" ? null : arr[1];
+          }
+        });
+        return value;
+      }
+      var questionsSection;
+      document.addEventListener("DOMContentLoaded", function () {
+        const signinWarning = document.getElementById("signin_warning");
+        const signinForms = document.getElementById("admin_signin");
+        questionsSection = document.getElementById("questions");
+
+        authorization = getCookie("authorization");
+
+        if (!authorization) {
+          signinForms.classList.add("disappear");
+          signinWarning.innerText = "you don't have admin access!";
+        } else {
+          signinWarning.classList.add("disappear");
+        }
+
+        function insertQuestion(root, question, index) {
+          var questionElement = document.createElement("div");
+          questionElement.className = "questionCover";
+          questionElement.id = `${index}testQuestion`;
+
+          var queChild = document.createElement("div");
+          queChild.innerText = `Q: ${index + 1}. ${question.question}`;
+          queChild.className = "question";
+
+          var optionsCover = document.createElement("div");
+          optionsCover.className = "optionsCover";
+
+          var optionA = document.createElement("div");
+          optionA.innerText = `A: ${question.options.A}`;
+          var optionB = document.createElement("div");
+          optionB.innerText = `B: ${question.options.B}`;
+          var optionC = document.createElement("div");
+          optionC.innerText = `C: ${question.options.C}`;
+          var optionD = document.createElement("div");
+          optionD.innerText = `D: ${question.options.D}`;
+
+          optionsCover.appendChild(optionA);
+          optionsCover.appendChild(optionB);
+          optionsCover.appendChild(optionC);
+          optionsCover.appendChild(optionD);
+
+          var answer = document.createElement("div");
+          answer.innerText = `Answer: ${question.answer}`;
+          answer.className = "answer";
+
+          var removeBtn = document.createElement("button");
+          removeBtn.className = "register-btn btn btn-primary btn-md mt-4";
+          removeBtn.innerText = "remove";
+          removeBtn.addEventListener("click", () => {
+            removeQuestion(index);
+          });
+
+          questionElement.appendChild(queChild);
+          questionElement.appendChild(optionsCover);
+          questionElement.appendChild(answer);
+          questionElement.appendChild(removeBtn);
+
+          root.appendChild(questionElement);
+        }
+
+        function removeQuestion(index) {
+          var questions = localStorage.getItem("questions");
+          questions = JSON.parse(questions);
+          questions = questions.filter((_, i) => i !== index);
+          localStorage.setItem("questions", JSON.stringify(questions));
+          document.getElementById(`${index}testQuestion`).remove();
+        }
+
+        var testData = localStorage.getItem("testData");
+        if (testData) {
+          testData = JSON.parse(testData);
+          Object.entries(testData).map(([key, value]) => {
+            console.log(key, value);
+            document.getElementById(key).value = value;
+          });
+        }
+        var questions = localStorage.getItem("questions");
+
+        if (questions) {
+          questions = JSON.parse(questions);
+          questions.map((question, index) => {
+            insertQuestion(questionsSection, question, index);
+          });
+        }
+        const questionsForm = document.getElementById("questionsForm");
+        const addOTWarning = document.getElementById("addOTWarning");
+
+        questionsForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+          const formData = new FormData(this);
+          var question = {
+            question: formData.get("question"),
+            options: {
+              A: formData.get("A"),
+              B: formData.get("B"),
+              C: formData.get("C"),
+              D: formData.get("D"),
+            },
+            answer: formData.get("answer"),
+          };
+          var questions = localStorage.getItem("questions");
+          if (!questions) {
+            localStorage.setItem("questions", JSON.stringify([question]));
+            insertQuestion(questionsSection, question, 0);
+            questionsForm.reset();
+          } else {
+            questions = JSON.parse(questions);
+            insertQuestion(questionsSection, question, questions.length);
+            questions.push(question);
+            localStorage.setItem("questions", JSON.stringify(questions));
+            questionsForm.reset();
+          }
+        });
+
+        const addOTForm = document.getElementById("addOTForm");
+        addOTForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+          const formData = new FormData(this);
+
+          data = {
+            subject: formData.get("subject"),
+            chapter: formData.get("chapter"),
+            standard: formData.get("standard"),
+            testName: formData.get("testName"),
+            teacher: formData.get("teacher"),
+            startTime: formData.get("startTime"),
+            endTime: formData.get("endTime"),
+          };
+          data = JSON.stringify(data);
+          console.log(data);
+          localStorage.setItem("testData", data);
+        });
+      });
+
+      function handleAddOpenTest() {
+        var data = localStorage.getItem("testData");
+
+        data = JSON.parse(data);
+        console.log(data);
+        if (!data) {
+          addOTWarning.innerText = "You needs to Click Add Details first!";
+          return;
+        }
+
+        var questions = localStorage.getItem("questions");
+        questions = JSON.parse(questions);
+        if (!questions || questions.length === 0) {
+          addOTWarning.innerText = "You needs to add at least one question!";
+          return;
+        }
+        data.questions = JSON.stringify(questions);
+
+        const startTime = new Date(data.startTime);
+        const endTime = new Date(data.endTime);
+
+        data.startTime = startTime.getTime();
+        data.endTime = endTime.getTime();
+        console.log(data);
+        const formData = new FormData();
+        Object.entries(data).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+
+        fetch("/opentest/admin/addopentest", {
+          method: "POST",
+          headers: { authorization: authorization },
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              addOTWarning.innerText = data.success;
+              questionsForm.reset();
+              addOTForm.reset();
+              localStorage.clear();
+              questionsSection.innerHTML = "";
+            } else if (data.error) {
+              addOTWarning.innerText = data.error;
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+      function handleResetDetails() {
+        localStorage.removeItem("testData");
+        addOTForm.reset();
+      }
+    </script>
   </head>
   <body>
     <header class="header_tow">
@@ -246,21 +478,21 @@
         }
       </style>
 
-      <header class="header">
-        <div class="header-content">
-          <h1 class="display-4" style="color: white; font-weight: 700">
-            Assisting Students through Competitive Exams
-          </h1>
-          <p class="lead" style="color: rgb(232, 232, 232); font-weight: 100">
-            Welcome to World Inbox , The oldest and experienced application of
-            Gujarat.
-          </p>
-          <a
-            href="https://clpdiy14.page.link/purF"
-            class="btn"
-            style="background: #ff5a2c; color: white"
-            >Download App Now!</a
-          >
+      <header class="header_inner contact_page">
+        <div class="intro_wrapper">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-12 col-md-8 col-lg-8">
+                <div class="intro_text">
+                  <h1>Add Open Test</h1>
+                  <div class="pages_links">
+                    <a href="#" title="">Admin</a>
+                    <a href="#" title="" class="active">Add Open Test</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
       <section class="login_signup_option">
@@ -409,221 +641,233 @@
         </div>
       </section>
     </header>
+    <h2
+      id="signin_warning"
+      style="
+        margin: 10rem 0 5rem 0;
+        color: red;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      "
+    ></h2>
+    <section id="admin_signin" class="admin_signin">
+      <div class="mt-5">
+        <div class="form-full-box">
+          <div class="form_title">
+            <h2>Add Open Test</h2>
+            <p id="addOTWarning" style="color: red; font-size: x-large"></p>
+          </div>
+          <form
+            id="addOTForm"
+            style="
+              border: 1px solid gray;
+              border-radius: 10px;
+              margin: 1rem 0;
+              padding: 1rem;
+            "
+          >
+            <div class="register-form">
+              <div class="row">
+                <div class="col-12 col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <label for="Subject">Subject</label>
+                    <input
+                      class="form-control"
+                      name="subject"
+                      id="subject"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <label for="Chapter">Chapter</label>
+                    <input
+                      class="form-control"
+                      name="chapter"
+                      id="chapter"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <label for="standard">standard</label>
+                    <input
+                      class="form-control"
+                      name="standard"
+                      id="standard"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <label for="TestName">Test Name </label>
+                    <input
+                      class="form-control"
+                      name="testName"
+                      id="testName"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <label for="Teacher">Teacher Name</label>
+                    <input
+                      class="form-control"
+                      name="teacher"
+                      id="teacher"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <label for="StartTime">Start Time </label>
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      name="startTime"
+                      id="startTime"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-xs-12 col-md-12">
+                  <div class="form-group">
+                    <label for="EndTime">End Time</label>
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      name="endTime"
+                      id="endTime"
+                      required
+                    />
+                  </div>
+                </div>
 
-    <section class="about_us">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-sm-12 col-md-7 col-lg-7">
-            <div class="about_title">
-              <span>About Us</span>
-              <h2>World Inbox Knowledge Sharing Pvt. Ltd.</h2>
+                <div class="col-12 col-xs-12 col-md-12 register-btn-box">
+                  <div
+                    class="register-btn btn btn-primary btn-md mt-4"
+                    onclick="handleResetDetails()"
+                  >
+                    Reset Details
+                  </div>
+                  <button
+                    class="register-btn btn btn-primary btn-md mt-4"
+                    type="submit"
+                  >
+                    Add Details
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="col-12 col-sm-12 col-md-5 col-lg-5 p-0">
-            <div class="banner_about">
-              <img
-                src="images/banner/about_thinking.jpg"
-                alt=""
-                class="img-fluid"
-              />
+          </form>
+          <form
+            action=""
+            id="questionsForm"
+            style="
+              border: 1px solid gray;
+              border-radius: 10px;
+              margin: 1rem 0;
+              padding: 1rem;
+            "
+          >
+            <div id="questions"><h3>Questions:</h3></div>
+            <div class="col-12 col-xs-12 col-md-12">
+              <div class="form-group">
+                <label for="questions">Questions</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="question"
+                  id="questions"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Options</label>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: auto auto;
+                    gap: 1rem;
+                  "
+                >
+                  <div>
+                    <label for="OptionA">A</label>
+                    <input
+                      class="form-control"
+                      name="A"
+                      type="text"
+                      id="OptionA"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label for="OptionB">B</label>
+                    <input
+                      class="form-control"
+                      name="B"
+                      type="text"
+                      id="OptionB"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label for="OptionC">C</label>
+                    <input
+                      class="form-control"
+                      name="C"
+                      type="text"
+                      id="OptionC"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label for="OptionD">D</label>
+                    <input
+                      class="form-control"
+                      name="D"
+                      type="text"
+                      id="OptionD"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="answerSelect">Answer</label>
+                  <select class="form-control" name="answer" id="answerSelect">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                  </select>
+                </div>
+              </div>
+              <button
+                class="register-btn btn btn-primary btn-md mt-4"
+                type="submit"
+              >
+                Add Question
+              </button>
             </div>
-          </div>
+          </form>
         </div>
-        <div class="row about_content_wrapper">
-          <div class="col-12 col-sm-12 col-md-5 col-lg-5 p-0">
-            <div class="about_banner_down">
-              <img src="images/blog/blog_3.jpg" alt="" class="img-fluid" />
-            </div>
-          </div>
-          <div class="col-12 col-sm-12 col-md-7 col-lg-7">
-            <div class="about_content">
-              <p>
-                Welcome to World Inbox Academy, a platform designed to offer
-                top-notch coaching and learning solutions for aspirants of the
-                UPSC Civil Services Examination. Our goal is to help individuals
-                achieve their dream of becoming an IAS officer by offering
-                affordable and personalized courses tailored to their unique
-                needs and ambitions. However, if you continue to shy away from
-                pursuing your dreams, it’s a shame to let potential go to waste.
-                At World Inbox Academy, we provide the guidance and resources to
-                ensure you don’t miss out on the opportunity to build a
-                successful career in civil services. It would be a true
-                disservice to yourself to not take advantage of the quality
-                education we offer.
-              </p>
-            </div>
-          </div>
+        <div class="addOpenTest">
+          <button
+            class="register-btn btn btn-primary btn-lg mt-4"
+            onclick="handleAddOpenTest()"
+          >
+            Add Open Test
+          </button>
         </div>
       </div>
     </section>
-
-    <section class="out_count_student" style="margin-top: 5rem">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="sub_title">
-              <h2>Everything Is World Inbox</h2>
-              <p>
-                World Inbox Academy came together for the aspirants of the UPSC
-                CSE with a clear vision: to support and guide them in a
-                mission-driven approach to achieve their goals.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="counter_wrapper">
-              <div class="counter_single_wrapper">
-                <div class="section count_single">
-                  <div class="project-count">
-                    <span class="counter">1200 </span
-                    ><span class="count_icon">+</span>
-                  </div>
-                  <span>Active students</span>
-                </div>
-              </div>
-
-              <div class="counter_single_wrapper">
-                <div class="section count_single">
-                  <div class="project-count">
-                    <span class="counter">1300 </span
-                    ><span class="count_icon">+</span>
-                  </div>
-                  <span>Online Courses</span>
-                </div>
-              </div>
-
-              <div class="counter_single_wrapper">
-                <div class="section count_single">
-                  <div class="project-count">
-                    <span class="counter">1050 </span
-                    ><span class="count_icon">+</span>
-                  </div>
-                  <span>Satisfaction</span>
-                </div>
-              </div>
-
-              <div class="counter_single_wrapper">
-                <div class="section count_single">
-                  <div class="project-count">
-                    <span class="counter">1500 </span
-                    ><span class="count_icon">+</span>
-                  </div>
-                  <span>Fraduates</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bg_shapes"></div>
-    </section>
-
-    <section class="faq_about">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="sub_title">
-              <h2>Why Choose World Inbox Academy?</h2>
-              <p>
-                At World Inbox Academy, we are committed to providing the best
-                coaching experience for UPSC CSE aspirants. Here’s why we stand
-                out:
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="faq_wrapper">
-              <div class="single_faq">
-                <h3><span>1</span>Comprehensive Courses for All Stages</h3>
-                <p>
-                  Whether you’re preparing for Prelims, Mains, or the Interview
-                  stage, our tailored courses cover every aspect of the UPSC
-                  exam, ensuring you’re thoroughly prepared.
-                </p>
-              </div>
-              <div class="single_faq">
-                <h3><span>2</span>Affordable Yet High-Quality Education</h3>
-                <p>
-                  We believe that quality education should be accessible to
-                  everyone. Our courses are designed to be budget-friendly
-                  without compromising on the depth and excellence of the
-                  content.
-                </p>
-              </div>
-              <div class="single_faq">
-                <h3><span>3</span>Experienced and Dedicated Faculty</h3>
-                <p>
-                  Our faculty members are experienced educators and former civil
-                  servants who bring practical insights and expert guidance to
-                  the classroom. They are dedicated to helping you succeed and
-                  provide personalized attention to each student.
-                </p>
-              </div>
-              <div class="single_faq">
-                <h3><span>4</span>Flexible Learning Options</h3>
-                <p>
-                  Understanding that every learner is different, we offer both
-                  online and offline learning options. This flexibility allows
-                  you to study at your own pace and convenience, whether you
-                  prefer self-paced learning or structured classroom sessions.
-                </p>
-              </div>
-              <div class="single_faq">
-                <h3><span>5</span>Result-Oriented Approach</h3>
-                <p>
-                  We focus on results. Our well-researched study materials,
-                  regular mock tests, and detailed feedback ensure that you are
-                  always progressing toward your goal of becoming an IAS
-                  officer.
-                </p>
-              </div>
-              <div class="single_faq">
-                <h3><span>6</span>Personalized Mentorship</h3>
-                <p>
-                  At World Inbox Academy, we provide one-on-one mentoring to
-                  help you stay on track, clear doubts, and receive expert
-                  advice tailored to your individual needs.
-                </p>
-              </div>
-              <div class="single_faq">
-                <h3><span>7</span>Student-Centric Support</h3>
-                <p>
-                  From doubt-solving sessions to motivational support, we are
-                  with you every step of the way. Our goal is not just to teach
-                  but to mentor and motivate you to perform at your best.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="teamgroup">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
-            <div class="teamgroup_info_wrapper">
-              <h2>
-                Choose World Inbox Academy because we are more than just a
-                coaching center—we are your partner in turning your UPSC CSE
-                dream into a reality.
-              </h2>
-              <a href="#" title="" class="srtarte_btn">Get Started Now</a>
-            </div>
-            <div class="teamgroup_info_banner">
-              <img src="images/banner/teamgroup.png" alt="" class="img-fluid" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
     <footer class="footer_2">
       <div class="container">
         <div class="footer_top">
@@ -695,13 +939,5 @@
         <img src="images/shapes/footer_2.png" alt="" class="shape_1" />
       </div>
     </footer>
-    <!-- End Footer -->
-
-    <section id="scroll-top" class="scroll-top">
-      <h2 class="disabled">Scroll to top</h2>
-      <div class="to-top pos-rtive">
-        <a><i class="flaticon-right-arrow"></i></a>
-      </div>
-    </section>
   </body>
 </html>

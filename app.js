@@ -2,6 +2,11 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
+const indexRoutes = require("./routes/index.routes");
+const adminRoutes = require("./routes/adminRoutes");
+const openTestRoutes = require("./routes/openTestRoutes");
+const userRoutes = require("./routes/userRoutes");
+const currentAffairRoutes = require("./routes/currentAffairsRoutes");
 require("dotenv").config();
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -25,11 +30,12 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-const indexRoutes = require("./routes/index.routes");
-const adminRoutes = require("./routes/adminRoutes");
+// Backend Routes
 app.use("/", indexRoutes);
 app.use("/admin", adminRoutes);
+app.use("/user", userRoutes);
+app.use("/opentest", openTestRoutes);
+app.use("/currentaffairData", currentAffairRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

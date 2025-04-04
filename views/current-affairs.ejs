@@ -152,9 +152,9 @@
                 <li class="nav-item">
                   <a href="/mentorship" class="nav-link">MentorShip</a>
                 </li>
-                <!-- <li class="nav-item">
+                <li class="nav-item">
                   <a href="/open-test" class="nav-link">Open Test</a>
-                </li> -->
+                </li>
               </ul>
             </div>
           </nav>
@@ -185,30 +185,36 @@
     <section class="events-area">
       <div class="container">
         <div class="row">
-          Coming Soon
-          <!-- <% data.map((item)=>{ %>
+          <%=currentAffairs.length===0? "No Current Affairs":"" %> <%
+          currentAffairs.map((item)=>{ const date = new Date(item.date); const
+          monthString = monthNames[date.getMonth()]; const dayString =
+          String(date.getDate()); %>
           <div class="col-sm-12 events_full_box">
             <div class="events_single">
               <div class="event_banner">
-                <img src="<%= item.imgurl %>" alt class="img-fluid" />
+                <img
+                  src="/currentAffairsAssets/<%= item.coverImage %>"
+                  alt
+                  class="img-fluid"
+                />
               </div>
               <div class="event_info">
                 <h3><%= item.title %></h3>
                 <div class="events_time">
                   <span class="time">
                     <i class="fa-solid fa-pen"></i>
-                    <%= item.writtenby %>
+                    <%= item.writer %>
                   </span>
                 </div>
-                <p><%= item.description %></p>
+                <p><%=item.content.slice(0,60) + "..." %></p>
                 <div class="event_dete">
-                  <span class="date"> <%= item.date %> </span>
-                  <span> <%= item.month %> </span>
+                  <span class="date"> <%= dayString %> </span>
+                  <span> <%= monthString %> </span>
                 </div>
               </div>
             </div>
           </div>
-          <%}) %> -->
+          <%}) %>
         </div>
       </div>
     </section>
