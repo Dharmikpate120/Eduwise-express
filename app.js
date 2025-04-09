@@ -2,14 +2,16 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 const indexRoutes = require("./routes/index.routes");
 const adminRoutes = require("./routes/adminRoutes");
 const openTestRoutes = require("./routes/openTestRoutes");
 const userRoutes = require("./routes/userRoutes");
 const currentAffairRoutes = require("./routes/currentAffairsRoutes");
-require("dotenv").config();
-const MONGODB_URI = process.env.MONGODB_URI;
 
+require("dotenv").config();
+
+const MONGODB_URI = process.env.MONGODB_URI;
 mongoose
   .connect(MONGODB_URI, {
     useNewUrlParser: true,
@@ -20,7 +22,8 @@ mongoose
 
 app.set("view engine", "ejs");
 
-app.use(express.static(path.join(__dirname, "Public")));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
   if (req.path.endsWith(".css")) {
     res.setHeader("Content-Type", "text/css");

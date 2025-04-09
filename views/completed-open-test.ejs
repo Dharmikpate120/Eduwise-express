@@ -35,10 +35,6 @@
     <!-- Slick Carousel -->
     <link rel="stylesheet" href="css/assets/slick.css" />
 
-    <!-- Revolution Slider -->
-    <link rel="stylesheet" href="css/assets/revolution/layers.css" />
-    <link rel="stylesheet" href="css/assets/revolution/navigation.css" />
-    <link rel="stylesheet" href="css/assets/revolution/settings.css" />
     <!-- Mean Menu-->
     <link rel="stylesheet" href="css/assets/meanmenu.css" />
     <!-- main style-->
@@ -46,7 +42,6 @@
     <link rel="stylesheet" href="css/responsive.css" />
     <link rel="stylesheet" href="css/demo.css" />
 
-    <!-- <script src="../js/index.js" defer></script> -->
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -78,6 +73,12 @@
       .disappear {
         display: none !important;
       }
+      .testDetails {
+        border: 1px solid black;
+        margin: 1rem 0;
+        padding: 1rem;
+        border-radius: 10px;
+      }
     </style>
     <script>
       function setCookie(name, value, days) {
@@ -96,84 +97,100 @@
         });
         return value;
       }
-      var addUpdateWarning;
+      function deleteCookie(name) {
+        document.cookie = `${name}=; expires=000`;
+      }
+
+      var OTWarning;
+      var auth_token;
+      var testtoken;
+
+      function addTestResults(results) {
+        const resultDetails = document.getElementById("resultDetails");
+
+        results.map((test) => {
+          var detailsCover = document.createElement("div");
+          detailsCover.classList =
+            "job-box d-md-flex align-items-center justify-content-between mb-30 testDetails";
+
+          var detailsInner = document.createElement("div");
+          detailsInner.classList =
+            "job-left my-4 d-md-flex align-items-center flex-wrap";
+
+          var detailsFlex = document.createElement("div");
+          detailsFlex.classList = "job-content";
+
+          const testTitle = document.createElement("h5");
+          testTitle.classList = "text-center text-md-left mb-2";
+          testTitle.innerText = test.testDetails.testName;
+
+          const detailsList = document.createElement("ul");
+          detailsList.classList =
+            "d-md-flex flex-wrap text-capitalize ff-open-sans mb-2";
+          const testSubject = document.createElement("div");
+          testSubject.classList.add("mr-md-4");
+          const testChapter = document.createElement("div");
+          testChapter.classList.add("mr-md-4");
+          const testStandard = document.createElement("div");
+          testStandard.classList.add("mr-md-4");
+          const testTeacher = document.createElement("div");
+          testTeacher.classList.add("mr-md-4");
+          testSubject.innerText = "Subject: " + test.testDetails.subject;
+          testChapter.innerText = "Chapter: " + test.testDetails.chapter;
+          testStandard.innerText = "Standard: " + test.testDetails.standard;
+          testTeacher.innerText = "Teacher: " + test.testDetails.teacher;
+          detailsList.appendChild(testSubject);
+          detailsList.appendChild(testChapter);
+          detailsList.appendChild(testStandard);
+          detailsList.appendChild(testTeacher);
+
+          var marks = document.createElement("h5");
+          marks.innerText = `Obtained Marks: ${test.obtainedMarks} / ${test.totalMarks} | Not Attempted: ${test.notAttempted} `;
+
+          detailsFlex.appendChild(testTitle);
+          detailsFlex.appendChild(detailsList);
+          detailsFlex.appendChild(marks);
+          detailsInner.appendChild(detailsFlex);
+          detailsCover.appendChild(detailsInner);
+          resultDetails.appendChild(detailsCover);
+        });
+      }
+
       document.addEventListener("DOMContentLoaded", function () {
         const signinWarning = document.getElementById("signin_warning");
-        const signinForms = document.getElementById("admin_signin");
+        var signinForms = document.getElementById("admin_signin");
+        OTWarning = document.getElementById("OTWarning");
 
-        authorization = getCookie("authorization");
-        if (!authorization) {
+        auth_token = getCookie("auth_token");
+        if (!auth_token) {
+          console.log(!auth_token);
           signinForms.classList.add("disappear");
-          signinWarning.innerText = "you don't have admin access!";
+          signinWarning.innerText = "you have to signin first!";
         } else {
           signinWarning.classList.add("disappear");
+
+          fetch("/opentest/fetchcompletedtests", {
+            method: "POST",
+            headers: { authorization: auth_token },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                addTestResults(data.results);
+              } else if (data.error) {
+                OTWarning.innerText = data.error;
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
         }
-        addUpdateWarning = document.getElementById("addCAwarning");
       });
-
-      function handleCaPermenantlyDelete(id) {
-        var confirmation = confirm(
-          "Are you sure to Permenantly Delete this Current Affair?"
-        );
-        if (!confirmation) {
-          return;
-        }
-        var caDiv = document.getElementById(id);
-        var formData = new FormData();
-        formData.append("id", id);
-
-        fetch("/currentaffairData/admin/permenantlydeletecurrentaffair", {
-          method: "POST",
-          headers: { authorization },
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              addUpdateWarning.innerText = data.success;
-              caDiv.remove();
-            } else if (data.error) {
-              addUpdateWarning.innerText = data.error;
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
-      function handleCaRestore(id) {
-        var confirmation = confirm(
-          "Are you sure to restore this Current Affair from bin?"
-        );
-        if (!confirmation) {
-          return;
-        }
-        var caDiv = document.getElementById(id);
-        var formData = new FormData();
-        formData.append("id", id);
-
-        fetch("/currentaffairData/admin/restoredeletedcurrentaffair", {
-          method: "POST",
-          headers: { authorization },
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              addUpdateWarning.innerText = data.success;
-              caDiv.remove();
-            } else if (data.error) {
-              addUpdateWarning.innerText = data.error;
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
     </script>
   </head>
   <body>
     <header class="header_tow">
-     <div class="header_top">
+      <div class="header_top">
         <div class="container">
           <div class="row">
             <div class="col-12 col-sm-12 col-lg-12">
@@ -449,211 +466,29 @@
           </div>
         </div>
       </section>
+    </header>
 
-      <style>
-        .header {
-          position: relative;
-          background: url("images/banner/original_banner.jpg") no-repeat center
-            center;
-          background-size: cover;
-          height: 100vh;
-          color: white;
-        }
-        .header-content {
-          position: absolute;
-          min-width: 60%;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          text-align: center;
-        }
-        .header-title {
-          font-size: 3rem;
-          font-weight: bold;
-          color: #ffffff;
-        }
-        .header-text {
-          font-size: 1.5rem;
-          margin-bottom: 20px;
-          color: #ffffff;
-        }
-        .header-button {
-          font-size: 1rem;
-          padding: 10px 20px;
-          background: #ff5a2c;
-          border: none;
-        }
-      </style>
-
-      <header class="header_inner contact_page">
-        <div class="intro_wrapper">
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-12 col-md-8 col-lg-8">
-                <div class="intro_text">
-                  <h1>Recycle Bin</h1>
-                  <div class="pages_links">
-                    <a href="#" title="">Admin</a>
-                    <a href="#" title="" class="active"
-                      >Current Affairs Recycle Bin</a
-                    >
-                  </div>
+    <header class="header_inner contact_page">
+      <div class="intro_wrapper">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12 col-md-8 col-lg-8">
+              <div class="intro_text">
+                <h1>Attempt Test</h1>
+                <div class="pages_links">
+                  <a href="#" title="">Home</a>
+                  <a href="#" title="" class="active">Attempt Test</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </header>
-      <section class="login_signup_option">
-        <div class="l-modal is-hidden--off-flow js-modal-shopify">
-          <div class="l-modal__shadow js-modal-hide"></div>
-          <div class="login_popup login_modal_body">
-            <div class="Popup_title d-flex justify-content-between">
-              <h2 class="hidden">&nbsp;</h2>
-              <div class="row">
-                <div
-                  class="col-12 col-lg-12 col-md-12 col-lg-12 login_option_btn"
-                >
-                  <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item">
-                      <a
-                        class="nav-link active"
-                        data-toggle="tab"
-                        href="#login"
-                        role="tab"
-                        >Login</a
-                      >
-                    </li>
-                    <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        data-toggle="tab"
-                        href="#panel2"
-                        role="tab"
-                        >Register</a
-                      >
-                    </li>
-                  </ul>
-                </div>
-                <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                  <!-- Tab panels -->
-                  <div class="tab-content card">
-                    <!--Login-->
-                    <div
-                      class="tab-pane fade in show active"
-                      id="login"
-                      role="tabpanel"
-                    >
-                      <form onsubmit="submitHandler">
-                        <div class="row">
-                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                            <div class="form-group">
-                              <label class="control-label">Email</label>
-                              <input
-                                type="email"
-                                id="login-email"
-                                class="form-control"
-                                placeholder="Username"
-                                value="dharmik7458@gmail.com"
-                              />
-                            </div>
-                          </div>
-                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                            <div class="form-group">
-                              <label class="control-label">Password</label>
-                              <input
-                                type="password"
-                                id="login-password"
-                                class="form-control"
-                                placeholder="Password"
-                                value="hello world"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div
-                            class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option"
-                          >
-                            <button
-                              type="submit"
-                              class="btn btn-default login_btn"
-                              onclick="login()"
-                            >
-                              Login
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                    <div class="tab-pane fade" id="panel2" role="tabpanel">
-                      <form action="#" class="register">
-                        <div class="row">
-                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                            <div class="form-group">
-                              <label class="control-label">Name</label>
-                              <input
-                                type="text"
-                                id="signup-name"
-                                class="form-control"
-                                placeholder="Username"
-                                value="dharmik"
-                              />
-                            </div>
-                          </div>
-                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                            <div class="form-group">
-                              <label class="control-label">Email</label>
-                              <input
-                                type="email"
-                                id="signup-email"
-                                class="form-control"
-                                placeholder="Email"
-                                value="dharmik7458@gmail.com"
-                              />
-                            </div>
-                          </div>
-                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                            <div class="form-group">
-                              <label class="control-label">Password</label>
-                              <input
-                                type="password"
-                                id="signup-password"
-                                class="form-control"
-                                placeholder="Password"
-                                value="hello world"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div
-                            class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option"
-                          >
-                            <button
-                              type="submit"
-                              class="btn btn-default login_btn"
-                              onclick="signup()"
-                            >
-                              Register
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                    <!--/.Panel 2-->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      </div>
     </header>
     <h2
       id="signin_warning"
       style="
-        margin: 10rem 0 5rem 0;
+        margin: 2rem 0;
         color: red;
         width: 100%;
         display: flex;
@@ -661,64 +496,17 @@
         align-items: center;
       "
     ></h2>
+
     <section id="admin_signin" class="admin_signin">
       <div class="mt-5">
         <div class="form-full-box">
-          <div class="form_title">
-            <h2>Recycle Bin</h2>
-            <p id="addCAwarning" style="color: red; font-size: x-large"></p>
-          </div>
-          <section class="events-area">
-            <div class="container">
-              <div class="row">
-                <%=ca.length===0? "Empty Recycle Bin":"" %> <% ca.map((item)=>{
-                const date = new Date(item.date); const monthString =
-                monthNames[date.getMonth()]; const dayString =
-                String(date.getDate()); %>
-                <div id="<%=item.id%>" class="col-sm-12 events_full_box">
-                  <div class="events_single">
-                    <div class="event_banner">
-                      <img
-                        src="/currentAffairsAssets/<%= item.coverImage %>"
-                        alt
-                        class="img-fluid"
-                      />
-                    </div>
-                    <div class="event_info">
-                      <h3><%= item.title %></h3>
-                      <div class="events_time">
-                        <span class="time"> <%= item.writer %> </span>
-                      </div>
-                      <p><%=item.content.slice(0,60) + "..." %></p>
-
-                      <button
-                        class="register-btn btn btn-primary btn-md mt-4"
-                        type="submit"
-                        onclick="handleCaPermenantlyDelete('<%=item.id%>')"
-                      >
-                        Permenantly Delete
-                      </button>
-                      <button
-                        class="register-btn btn btn-primary btn-md mt-4"
-                        type="submit"
-                        onclick="handleCaRestore('<%=item.id%>')"
-                      >
-                        Restore
-                      </button>
-                      <div class="event_dete">
-                        <span class="date"> <%= dayString %> </span>
-                        <span> <%= monthString %> </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <%}) %>
-              </div>
-            </div>
-          </section>
+          <p id="OTWarning" style="color: red; font-size: x-large"></p>
+          <div id="resultDetails"></div>
         </div>
       </div>
     </section>
+
+    <!-- Footer -->
     <footer class="footer_2">
       <div class="container">
         <div class="footer_top">
@@ -726,6 +514,7 @@
             <div class="col-12 col-md-6 col-lg-4">
               <div class="footer_single_col footer_intro">
                 <img src="images/LOGO_LIGHT.png" alt="" class="f_logo" />
+
                 <p>World Inbox Academy Vadodara</p>
               </div>
             </div>
@@ -790,5 +579,13 @@
         <img src="images/shapes/footer_2.png" alt="" class="shape_1" />
       </div>
     </footer>
+    <!-- End Footer -->
+
+    <section id="scroll-top" class="scroll-top">
+      <h2 class="disabled">Scroll to top</h2>
+      <div class="to-top pos-rtive">
+        <a><i class="flaticon-right-arrow"></i></a>
+      </div>
+    </section>
   </body>
 </html>

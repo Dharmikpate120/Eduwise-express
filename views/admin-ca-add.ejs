@@ -259,9 +259,7 @@
                     >Current Affairs</a
                   >
                 </li>
-                <li class="nav-item">
-                  <a href="/mentorship" class="nav-link">MentorShip</a>
-                </li>
+
                 <li class="nav-item">
                   <a href="/open-test" class="nav-link">Open Test</a>
                 </li>
@@ -270,6 +268,151 @@
           </nav>
         </div>
       </div>
+      <section class="login_signup_option">
+        <div class="l-modal is-hidden--off-flow js-modal-shopify">
+          <div class="l-modal__shadow js-modal-hide"></div>
+          <div class="login_popup login_modal_body">
+            <div class="Popup_title d-flex justify-content-between">
+              <h2 class="hidden">&nbsp;</h2>
+              <div class="row">
+                <div
+                  class="col-12 col-lg-12 col-md-12 col-lg-12 login_option_btn"
+                >
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                      <a
+                        class="nav-link active"
+                        data-toggle="tab"
+                        href="#login"
+                        role="tab"
+                        >Login</a
+                      >
+                    </li>
+                    <li class="nav-item">
+                      <a
+                        class="nav-link"
+                        data-toggle="tab"
+                        href="#panel2"
+                        role="tab"
+                        >Register</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                  <!-- Tab panels -->
+                  <div class="tab-content card">
+                    <!--Login-->
+                    <div
+                      class="tab-pane fade in show active"
+                      id="login"
+                      role="tabpanel"
+                    >
+                      <form onsubmit="submitHandler">
+                        <div class="row">
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Email</label>
+                              <input
+                                type="email"
+                                id="login-email"
+                                class="form-control"
+                                placeholder="Username"
+                                value="dharmik7458@gmail.com"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Password</label>
+                              <input
+                                type="password"
+                                id="login-password"
+                                class="form-control"
+                                placeholder="Password"
+                                value="hello world"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div
+                            class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-default login_btn"
+                              onclick="login()"
+                            >
+                              Login
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="tab-pane fade" id="panel2" role="tabpanel">
+                      <form action="#" class="register">
+                        <div class="row">
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Name</label>
+                              <input
+                                type="text"
+                                id="signup-name"
+                                class="form-control"
+                                placeholder="Username"
+                                value="dharmik"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Email</label>
+                              <input
+                                type="email"
+                                id="signup-email"
+                                class="form-control"
+                                placeholder="Email"
+                                value="dharmik7458@gmail.com"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Password</label>
+                              <input
+                                type="password"
+                                id="signup-password"
+                                class="form-control"
+                                placeholder="Password"
+                                value="hello world"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div
+                            class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-default login_btn"
+                              onclick="signup()"
+                            >
+                              Register
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <!--/.Panel 2-->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <style>
         .header {

@@ -43,12 +43,34 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/responsive.css" />
     <link rel="stylesheet" href="css/demo.css" />
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/assets/revolution/jquery.themepunch.revolution.min.js"></script>
+    <script src="js/assets/revolution/jquery.themepunch.tools.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/slick.min.js"></script>
+    <script src="js/jquery.meanmenu.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="js/waypoints.min.js"></script>
+    <script src="js/jquery.counterup.min.js"></script>
+    <script src="js/assets/revolution/extensions/revolution.extension.actions.min.js"></script>
+    <script src="js/assets/revolution/extensions/revolution.extension.carousel.min.js"></script>
+    <script src="js/assets/revolution/extensions/revolution.extension.kenburn.min.js"></script>
+    <script src="js/assets/revolution/extensions/revolution.extension.layeranimation.min.js"></script>
+    <script src="js/assets/revolution/extensions/revolution.extension.migration.min.js"></script>
+    <script src="js/assets/revolution/extensions/revolution.extension.navigation.min.js"></script>
+    <script src="js/assets/revolution/extensions/revolution.extension.parallax.min.js"></script>
+    <script src="js/assets/revolution/extensions/revolution.extension.slideanims.min.js"></script>
+    <script src="js/assets/revolution/extensions/revolution.extension.video.min.js"></script>
+    <script src="js/assets/revolution/revolution.js"></script>
+    <script src="js/custom.js"></script>
+
+    <link rel="stylesheet" href="css/eventCSS/styles.css" />
+    <script src="../userValidation/index.js" defer></script>
+    <script src="../userValidation/userAuth.js" defer></script>
   </head>
   <body>
     <header class="header_tow">
@@ -67,6 +89,31 @@
                   </ul>
                 </div>
                 <div class="login_info">
+                  <ul class="" style="display: flex" id="auth_pending">
+                    <li class="nav-item">
+                      <a href="#" class="nav-link sign-in js-modal-show"
+                        ><i
+                          class="flaticon-user-male-black-shape-with-plus-sign"
+                        ></i
+                        >Sign Up</a
+                      >
+                    </li>
+                    <li class="nav-item">
+                      <a href="#" class="nav-link join_now js-modal-show"
+                        ><i class="flaticon-padlock"></i>Log In</a
+                      >
+                    </li>
+                  </ul>
+                  <ul id="auth_successfull">
+                    <li class="nav-item">
+                      <a
+                        href="#"
+                        onclick="logout()"
+                        class="nav-link join_now js-modal-show"
+                        ><i class="flaticon-padlock"></i>Log Out</a
+                      >
+                    </li>
+                  </ul>
                   <a
                     href="https://clpdiy14.page.link/purF"
                     target="_blank"
@@ -80,17 +127,18 @@
           </div>
         </div>
       </div>
+
       <div
         class="edu_nav"
         style="
-          background-color: rgba(255, 255, 255, 0.359);
+          background-color: rgba(255, 255, 255, 0.65);
           backdrop-filter: blur(10px);
         "
       >
         <div class="container">
           <nav class="navbar navbar-expand-md navbar-light bg-faded">
             <a class="navbar-brand" href="/"
-              ><img src="../../images/logo2.png" alt="logo"
+              ><img src="images/logo2.png" alt="logo"
             /></a>
             <div
               class="collapse navbar-collapse main-menu"
@@ -98,9 +146,8 @@
             >
               <ul class="navbar-nav nav lavalamp ml-auto menu">
                 <li class="nav-item">
-                  <a href="/" class="nav-link">Home</a>
+                  <a href="/" class="nav-link active">Home</a>
                 </li>
-
                 <li class="nav-item">
                   <a class="nav-link" style="cursor: pointer">Updates</a>
                   <ul class="navbar-nav nav mx-auto">
@@ -145,13 +192,11 @@
                   </ul>
                 </li>
                 <li class="nav-item">
-                  <a href="/current-affairs" class="nav-link active"
+                  <a href="/current-affairs" class="nav-link"
                     >Current Affairs</a
                   >
                 </li>
-                <li class="nav-item">
-                  <a href="/mentorship" class="nav-link">MentorShip</a>
-                </li>
+
                 <li class="nav-item">
                   <a href="/open-test" class="nav-link">Open Test</a>
                 </li>
@@ -160,6 +205,151 @@
           </nav>
         </div>
       </div>
+      <section class="login_signup_option">
+        <div class="l-modal is-hidden--off-flow js-modal-shopify">
+          <div class="l-modal__shadow js-modal-hide"></div>
+          <div class="login_popup login_modal_body">
+            <div class="Popup_title d-flex justify-content-between">
+              <h2 class="hidden">&nbsp;</h2>
+              <div class="row">
+                <div
+                  class="col-12 col-lg-12 col-md-12 col-lg-12 login_option_btn"
+                >
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                      <a
+                        class="nav-link active"
+                        data-toggle="tab"
+                        href="#login"
+                        role="tab"
+                        >Login</a
+                      >
+                    </li>
+                    <li class="nav-item">
+                      <a
+                        class="nav-link"
+                        data-toggle="tab"
+                        href="#panel2"
+                        role="tab"
+                        >Register</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                  <!-- Tab panels -->
+                  <div class="tab-content card">
+                    <!--Login-->
+                    <div
+                      class="tab-pane fade in show active"
+                      id="login"
+                      role="tabpanel"
+                    >
+                      <form onsubmit="submitHandler">
+                        <div class="row">
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Email</label>
+                              <input
+                                type="email"
+                                id="login-email"
+                                class="form-control"
+                                placeholder="Username"
+                                value="dharmik7458@gmail.com"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Password</label>
+                              <input
+                                type="password"
+                                id="login-password"
+                                class="form-control"
+                                placeholder="Password"
+                                value="hello world"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div
+                            class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-default login_btn"
+                              onclick="login()"
+                            >
+                              Login
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="tab-pane fade" id="panel2" role="tabpanel">
+                      <form action="#" class="register">
+                        <div class="row">
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Name</label>
+                              <input
+                                type="text"
+                                id="signup-name"
+                                class="form-control"
+                                placeholder="Username"
+                                value="dharmik"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Email</label>
+                              <input
+                                type="email"
+                                id="signup-email"
+                                class="form-control"
+                                placeholder="Email"
+                                value="dharmik7458@gmail.com"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-12 col-lg-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <label class="control-label">Password</label>
+                              <input
+                                type="password"
+                                id="signup-password"
+                                class="form-control"
+                                placeholder="Password"
+                                value="hello world"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div
+                            class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-default login_btn"
+                              onclick="signup()"
+                            >
+                              Register
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <!--/.Panel 2-->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </header>
 
     <header class="header_inner event_page">
@@ -189,7 +379,7 @@
           currentAffairs.map((item)=>{ const date = new Date(item.date); const
           monthString = monthNames[date.getMonth()]; const dayString =
           String(date.getDate()); %>
-          <div class="col-sm-12 events_full_box">
+          <a href="/blogs/<%=item.id%>" class="col-sm-12 events_full_box">
             <div class="events_single">
               <div class="event_banner">
                 <img
@@ -213,7 +403,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </a>
           <%}) %>
         </div>
       </div>
