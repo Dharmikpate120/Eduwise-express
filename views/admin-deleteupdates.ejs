@@ -109,56 +109,6 @@
           signinWarning.classList.add("disappear");
         }
 
-        const addUpdateForm = document.getElementById("addUpdateForm");
-        const addUpdateWarning = document.getElementById("addUpdateWarning");
-        addUpdateForm.addEventListener("submit", function (event) {
-          event.preventDefault();
-          const formData = new FormData(this);
-          fetch("/admin/newUpdate", {
-            method: "POST",
-            headers: { authorization: authCookie },
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.success) {
-                addUpdateWarning.innerText = data.success;
-                addUpdateForm.reset();
-              } else if (data.error) {
-                addUpdateWarning.innerText = data.error;
-              }
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-            });
-        });
-
-        const changeUpdateForm = document.getElementById("changeUpdateForm");
-        const changeUpdateWarning = document.getElementById(
-          "changeUpdateWarning"
-        );
-        changeUpdateForm.addEventListener("submit", function (event) {
-          event.preventDefault();
-          const formData = new FormData(this);
-          fetch("/admin/changeUpdate", {
-            method: "POST",
-            headers: { authorization: authCookie },
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.success) {
-                changeUpdateWarning.innerText = data.success;
-                addUpdateForm.reset();
-              } else if (data.error) {
-                changeUpdateWarning.innerText = data.error;
-              }
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-            });
-        });
-
         const deleteUpdateForm = document.getElementById("deleteUpdateForm");
         const deleteUpdateWarning = document.getElementById(
           "deleteUpdateWarning"
@@ -175,7 +125,7 @@
             .then((data) => {
               if (data.success) {
                 deleteUpdateWarning.innerText = data.success;
-                addUpdateForm.reset();
+                deleteUpdateForm.reset();
               } else if (data.error) {
                 deleteUpdateWarning.innerText = data.error;
               }

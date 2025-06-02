@@ -50,9 +50,6 @@
     <link rel="stylesheet" href="../../css/responsive.css" />
     <link rel="stylesheet" href="../../css/demo.css" />
 
-    <link rel="stylesheet" href="../../css/eventCSS/styles.css" />
-    <script src="../../../userValidation/index.js" defer></script>
-    <script src="../../../js/index.js" defer></script>
     <script src="../../js/jquery-3.2.1.min.js"></script>
     <script src="../../js/popper.min.js"></script>
     <script src="../../js/bootstrap.min.js"></script>
@@ -78,9 +75,9 @@
     <script src="../../js/assets/revolution/revolution.js"></script>
     <script src="../../js/custom.js"></script>
 
-    <link rel="stylesheet" href="css/eventCSS/styles.css" />
-    <script src="../userValidation/index.js" defer></script>
-    <script src="../userValidation/userAuth.js" defer></script>
+    <link rel="stylesheet" href="../../css/eventCSS/styles.css" />
+    <script src="../../../userValidation/index.js" defer></script>
+    <script src="../../../userValidation/userAuth.js" defer></script>
     <style>
       .subsection-title {
         display: flex;
@@ -189,7 +186,7 @@
                         <%item.chapters.map((e)=>{%>
                         <li class="nav-item">
                           <a
-                            href="<%=`updates/${item.subject}/${e.title}`%>"
+                            href="/<%=`updates/${item.subject}/${e.title}`%>"
                             class="nav-link"
                             ><%=e.title%></a
                           >
