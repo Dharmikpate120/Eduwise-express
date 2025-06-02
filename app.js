@@ -23,7 +23,7 @@ mongoose
 app.set("view engine", "ejs");
 
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "Public")));
 app.use((req, res, next) => {
   if (req.path.endsWith(".css")) {
     res.setHeader("Content-Type", "text/css");
