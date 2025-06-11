@@ -1,4 +1,4 @@
-const backendUrl = "http://localhost:3000";
+
 
 // const backendUrl = "https://eduwise-1.onrender.com";
 function submitHandler(e) {
@@ -13,7 +13,7 @@ async function login() {
     email: login_email.value,
     password: login_password.value,
   };
-  var response = await fetch(`${backendUrl}/user/signin`, {
+  var response = await fetch(`/user/signin`, {
     method: "POST",
     body: JSON.stringify(login),
     headers: { "Content-Type": "application/json" },
@@ -42,7 +42,7 @@ async function signup() {
     email: signup_email.value,
     password: signup_password.value,
   };
-  var response = await fetch(`${backendUrl}/user/signup`, {
+  var response = await fetch(`/user/signup`, {
     method: "POST",
     body: JSON.stringify(signup),
     headers: { "Content-Type": "application/json" },
